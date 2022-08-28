@@ -16,6 +16,7 @@ import { AppComponent } from './app.component';
 import { PostCreate } from "./post-create/post-create.component";
 import { HeaderComponent } from './header/header.component';
 import { PostListComponent } from './post-list/post-list.component';
+import { HttpClientModule } from '@angular/common/http';
 
 
 @NgModule({
@@ -37,7 +38,8 @@ import { PostListComponent } from './post-list/post-list.component';
     MatToolbarModule,
     MatIconModule,
     MatListModule,
-    MatExpansionModule
+    MatExpansionModule,
+    HttpClientModule
   ],
   providers: [],
   bootstrap: [AppComponent]

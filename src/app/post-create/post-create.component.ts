@@ -14,5 +14,6 @@ export class PostCreate{
   onCreatePost( form: NgForm ): void{
     if (form.invalid){return;}
     this.service.addPost(form.value.title, form.value.content);
+    form.resetForm();
   }
 }
