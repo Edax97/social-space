@@ -1,4 +1,9 @@
 const express = require('express');
+const Post = require('./post.model');
+const mongoose = require('mongoose');
+mongoose.connect('mongodb+srv://edmar-admin:Js6P9a1C07lNaZVO@cluster0.n2nfn6d.mongodb.net/angularDB')
+      .then((res) => {console.log("Succesfully connected to todolistDB")});
+
 
 const app = express();
 
@@ -16,25 +21,48 @@ app.use((req, res, next)=>{
 
 
 app.post('/api/posts', (req, res) => {
-    const post = req.body.post;
-    console.log(post);
-    res.status(200).json({
-        message: 'Post added successfully'
-    })
+    const post = new Post({
+        title: req.body.post.title, 
+        content: req.body.post.content})
+    post.save()
+        .then(savedPost => {
+            console.log('Post added successfully')
+            res.status(200).json({
+                message: 'Post added successfully',
+                postId: savedPost._id
+            })
+        })
+    
 });
 
-app.get("/api/posts",(req, res, next)=>{
-    const posts = [
-        {id: "1", title: "First server post", content: "Coming from server"},
-        { id: '2', title: 'Second post', content: 'Coming from server too'},
-        { id: '3', title: 'Third post', content: 'Coming from server as well'}
+app.get("/api/posts", async (req, res, next)=>{
+    let posts = []
+    await Post.find()
+        .then(docs => {
+            posts = docs ;
+        });
 
-    ]
-    res.status(200).json({
+    res.status(201).json({
         message: 'Posts fetched with success!',
         posts: posts
     })
 })
+
+app.delete('/api/posts/:id', (req, res) => {
+    Post.deleteOne({_id: req.params.id})
+        .then(result => {
+            console.log(`Post ${ req.params.id} deleted`);
+            res.status(200).json({
+                message: 'Post successfully deleted'
+            })
+        })
+        .catch(e => {
+            console.log(e);
+            res.status(400).json({
+                message: 'Deletion failed'
+            })
+        })
+});
 
 
 
