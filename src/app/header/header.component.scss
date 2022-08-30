@@ -6,6 +6,12 @@ mat-toolbar{
     flex: 1 1 auto;
   }
   a{
-    padding-left: 1rem;
+    padding-right: 1rem;
+    text-decoration: none;
+    color: inherit;
+    
+  }
+  .active{
+    background: rgba(13, 10, 10, 0.2);
   }
 }

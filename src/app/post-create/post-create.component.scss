@@ -1,7 +1,20 @@
+@use '@angular/material' as mat;
+@use "sass:map";
+@include mat.core();
+
+
+
+$pink-palette: mat.$pink-palette;
+@debug map.get($pink-palette, '400');
 mat-card{
   
   mat-form-field{
     width: 97%;
   }
   text-align: center;
+
+  &.not-found{
+    background: map.get($pink-palette, 50);
+    color: map.get($pink-palette, 400);
+  }
 }

@@ -1,14 +1,20 @@
-<mat-card>
-  <form (submit)="onCreatePost( postForm )" #postForm = "ngForm">
+<mat-spinner *ngIf="isLoading"></mat-spinner>
+
+<mat-card *ngIf="(mode !== 'notFound' && !isLoading)">
+  <form (submit)="onSavePost( postForm )" #postForm = "ngForm">
     <mat-form-field>
-      <input matInput type="text" name="title" placeholder="Post Title" ngModel required>
+      <input matInput type="text" name="title" placeholder="Post Title" 
+      [ngModel] = 'currentPost?.title'
+      required>
       <mat-error>
         Please enter a title.
       </mat-error>
     </mat-form-field>
     <mat-form-field>
       <textarea matInput rows="6"
-        name='content' placeholder="Post body" ngModel required></textarea>
+        name='content' placeholder="Post body" 
+        [ngModel] = 'currentPost?.content' 
+        required></textarea>
       <mat-error>
         Please enter a body
       </mat-error>
@@ -16,6 +22,10 @@
     <br>
 
     <button mat-raised-button type="submit"
-      color="primary">New post</button>
+      color="primary">{{ mode === 'create'? 'New': 'Update'}} post</button>
   </form>
+</mat-card>
+
+<mat-card class='not-found' *ngIf="(mode === 'notFound' && !isLoading)">
+  <h2>Post not found!</h2>
 </mat-card>
