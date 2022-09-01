@@ -1,28 +1,36 @@
 <mat-spinner *ngIf="isLoading"></mat-spinner>
 
 <mat-card *ngIf="(mode !== 'notFound' && !isLoading)">
-  <form (submit)="onSavePost( postForm )" #postForm = "ngForm">
+  <form [formGroup]="form" (submit)="onSavePost()">
     <mat-form-field>
-      <input matInput type="text" name="title" placeholder="Post Title" 
-      [ngModel] = 'currentPost?.title'
+      <input matInput type="text" formControlName="title" placeholder="Post Title" 
       required>
       <mat-error>
         Please enter a title.
       </mat-error>
     </mat-form-field>
+    <div class= 'align'>
+      <button mat-stroked-button type="button" (click)="filepicker.click()">Pick image</button>
+      <input type="file" #filepicker (change)="onFileSelected($event)">
+    </div>
+    <div class= 'preview-image align' *ngIf="imagePreview !== '' && imagePreview && form.get('image').valid">
+      <img [src]="imagePreview" [alt]="form.value.image.name">
+    </div>
+    <div class="align" *ngIf="form.get('image').invalid"><p class='alert'>Invalid file type!</p></div>
     <mat-form-field>
       <textarea matInput rows="6"
-        name='content' placeholder="Post body" 
-        [ngModel] = 'currentPost?.content' 
+        formControlName='content' placeholder="Post body" 
         required></textarea>
       <mat-error>
         Please enter a body
       </mat-error>
-    </mat-form-field>
+    </mat-form-field> 
     <br>
-
-    <button mat-raised-button type="submit"
+    <div>
+      <button mat-raised-button type="submit"
       color="primary">{{ mode === 'create'? 'New': 'Update'}} post</button>
+    </div>
+    
   </form>
 </mat-card>
 

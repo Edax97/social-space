@@ -5,13 +5,21 @@ mat-toolbar{
   .space{
     flex: 1 1 auto;
   }
+  .main-link{
+    font-size: 110%;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+  }
   a{
     padding-right: 1rem;
     text-decoration: none;
     color: inherit;
-    
+    &.mat-button{
+      background: rgba(13, 10, 10, 0.15);
+    }
   }
+
   .active{
-    background: rgba(13, 10, 10, 0.2);
+    box-shadow:#000000 0px 0px 8px 0px
   }
 }

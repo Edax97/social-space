@@ -3,18 +3,40 @@
 @include mat.core();
 
 
-
+$alert: #f44336;
 $pink-palette: mat.$pink-palette;
 @debug map.get($pink-palette, '400');
 mat-card{
   
   mat-form-field{
     width: 97%;
+    margin: auto;
+    display: block;
   }
-  text-align: center;
+  .align{
+    margin-left: 1.5%;
+    margin-bottom: 1rem;
+  }
+  button[type='submit']{
+    display: block;
+    margin: 0 auto;
+  }
+  input[type='file']{
+    visibility: hidden;
+  }
+  .preview-image{
+    height: 6rem;
+    img{
+      height: 100%;
+    }
+  }
 
   &.not-found{
     background: map.get($pink-palette, 50);
     color: map.get($pink-palette, 400);
   }
+}
+
+.alert{
+  color: $alert;
 }

@@ -11,7 +11,9 @@ const postSchema = {
     requires: [1],
     minlength: 1,
   },
-  version: Number,
+  imagePath: {
+    type: String,
+  }
 };
 
 

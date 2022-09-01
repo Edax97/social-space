@@ -1,21 +1,41 @@
 const express = require('express');
+const multer = require('multer');
+const fs = require('fs');
 const Post = require('../models/post.model');
 
 
 const router = express.Router();
 
-router.post('', (req, res) => {
+const exts = {
+    'image/jpeg': '.jpeg',
+    'image/jpg': '.jpg',
+    'image/png': '.png'
+}
+
+const upload = multer({dest: 'images/'})
+
+router.post('', upload.single('image'), async (req, res) => {
+    const url = req.protocol + '://' + req.get('host');
+    let path = '';
+    if (req.file){
+        path = (url + '/' + req.file.path)
+    }
+    
     const post = new Post({
-        title: req.body.post.title, 
-        content: req.body.post.content})
+        title: req.body.title, 
+        content: req.body.content,
+        imagePath: path
+    })
     post.save()
         .then(savedPost => {
             console.log('Post added successfully')
             res.status(200).json({
                 message: 'Post added successfully',
-                postId: savedPost._id
+                postId: savedPost._id,
+                imagePath: post.imagePath
             })
         })
+        .catch(e => console.log(e))
     
 });
 
@@ -42,11 +62,18 @@ router.get('/:id', (req, res) => {
     })
 });
 
-router.put('/:id', (req, res) => {
+router.put('/:id', upload.single('image'),(req, res) => {
+    console.log(req.file, req.body);
+    const url = req.protocol + '://' + req.get('host');
+    let path = req.body.image ?? '';
+    if (req.file){
+        path = (url + '/' + req.file.path)
+    }
     const post = new Post({
         _id: req.params.id,
         title: req.body.title,
-        content: req.body.content
+        content: req.body.content,
+        imagePath: path
     });
     Post.updateOne({_id: req.params.id}, post)
         .then(mongoRes => {
