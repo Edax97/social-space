@@ -1,0 +1,39 @@
+@use '@angular/material' as mat;
+@use "sass:map";
+@include mat.core();
+
+
+$alert: #f44336;
+$pink-palette: mat.$pink-palette;
+@debug map.get($pink-palette, '400');
+mat-card{
+  
+  mat-form-field{
+    width: 97%;
+    margin: auto;
+    display: block;
+  }
+  .align{
+    margin-left: 1.5%;
+    margin-bottom: 1rem;
+  }
+  button[type='submit']{
+    display: block;
+    margin: 0 auto;
+  }
+  
+
+  &.not-found{
+    background: map.get($pink-palette, 50);
+    color: map.get($pink-palette, 400);
+  }
+}
+
+.alert{
+  color: $alert;
+}
+
+.shadow-box{
+  box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.4);
+  padding: 0.2rem;
+}

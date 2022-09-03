@@ -14,7 +14,7 @@
       <input type="file" #filepicker (change)="onFileSelected($event)">
     </div>
     <div class= 'preview-image align' *ngIf="imagePreview !== '' && imagePreview && form.get('image').valid">
-      <img [src]="imagePreview" [alt]="form.value.image.name">
+      <img class='shadow-box' [src]="imagePreview" [alt]="form.value.image.name">
     </div>
     <div class="align" *ngIf="form.get('image').invalid"><p class='alert'>Invalid file type!</p></div>
     <mat-form-field>

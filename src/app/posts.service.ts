@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Post } from "./models";
-import { Subject } from 'rxjs';
+import { BehaviorSubject, Subject } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { map } from 'rxjs/operators'
 import { Router } from '@angular/router';
@@ -9,34 +9,44 @@ import { Router } from '@angular/router';
 })
 export class PostsService {
   private posts: Post[] = [];
-  private postsUpdated = new Subject<Post[]>();
+  private maxPosts: Number = 0;
+  private postsUpdated = new BehaviorSubject<{posts: Post[], maxPosts: any}>(
+    {posts: [], maxPosts: 0}
+  );
+  private isLoading = new BehaviorSubject<boolean>(true);
+
   constructor(private http: HttpClient, private router: Router) { }
-  getPosts() {
-    this.http
-      .get<{message: string, posts: Array<any>}>
-      ('http://localhost:3000/api/posts')
+  getPosts(postsPerPage?: number, currentPage?: number) {
+    let queryParams = '';
+    if (postsPerPage && currentPage){queryParams = `?size=${postsPerPage}&page=${currentPage}`}
+    
+    this.isLoading.next(true);
+    this.http.get<{message: string, posts: Array<any>, numberPosts: Number}>
+      ('http://localhost:3000/api/posts/'+queryParams)
       .pipe(map(postData => {
-        return postData.posts.map(post => {
+        return {posts : postData.posts.map(post => {
           return{
             title: post.title,
             content: post.content,
             id: post._id,
             imagePath: post.imagePath ?? ''
           }
-        });
+        }), number: postData.numberPosts};
       }))
       .subscribe((resPosts) => {
           console.log(resPosts)
-          this.posts = resPosts;
-          this.postsUpdated.next([...this.posts]);
+          this.posts = resPosts.posts;
+          this.maxPosts = resPosts.number;
+          this.isLoading.next(false)
+          this.postsUpdated.next({posts: [...this.posts], maxPosts: this.maxPosts});
         })
   }
   getPost(postId: string): any{
     return this.http.get<any>
     ('http://localhost:3000/api/posts/'+postId);
   }
-  getUpdateListener() {
-    return this.postsUpdated.asObservable();
+  getUpdateListener(): Array<any>{
+    return [this.postsUpdated.asObservable(), this.isLoading.asObservable()];
   }
   
   addPost(title: string, content: string, image: File|string) {
@@ -49,9 +59,6 @@ export class PostsService {
     this.http.post<{ message: string, postId: string, imagePath: string }>
       ('http://localhost:3000/api/posts',  postData )
       .subscribe(res => {
-        const post: Post = {id: res.postId, title: title, content: content, imagePath: res.imagePath }
-        this.posts.push(post);
-        this.postsUpdated.next([...this.posts]);
         this.router.navigate(['/']);
       })
   }
@@ -64,10 +71,6 @@ export class PostsService {
     ('http://localhost:3000/api/posts/'+postId, postData)
     .subscribe(res => {
       console.log(res.message);
-      const index = this.posts.findIndex(p => p.id === postId);
-      const post: Post = {id: postId, title: title, content: content, imagePath: res.imagePath};
-      this.posts[index] = post;
-      this.postsUpdated.next([...this.posts]);
       this.router.navigate(['/']);
 
     })
@@ -79,7 +82,7 @@ export class PostsService {
     .subscribe(res =>{
       console.log(res.message);
       this.posts = this.posts.filter(post => post.id !== postId);
-      this.postsUpdated.next([...this.posts]);
+      this.postsUpdated.next({posts: [...this.posts], maxPosts: this.maxPosts});
     })
   }
 }

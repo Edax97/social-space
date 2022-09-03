@@ -25,7 +25,7 @@ mat-card{
     visibility: hidden;
   }
   .preview-image{
-    height: 6rem;
+    height: 8rem;
     img{
       height: 100%;
     }
@@ -39,4 +39,9 @@ mat-card{
 
 .alert{
   color: $alert;
+}
+
+.shadow-box{
+  box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.4);
+  padding: 0.2rem;
 }

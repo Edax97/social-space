@@ -16,7 +16,6 @@ export class PostCreate implements OnInit{
   isLoading = false;
   public mode = '';
   private postId: string = 'null';
-  currentPost: Post = {id: '', title: '', content: ''};
 
   constructor(private service: PostsService, private route: ActivatedRoute){};
 

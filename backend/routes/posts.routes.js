@@ -39,20 +39,21 @@ router.post('', upload.single('image'), async (req, res) => {
     
 });
 
-router.get("", async (req, res, next)=>{
-    let posts = []
-    await Post.find()
-        .then(docs => {
-            posts = docs ;
-        });
-
-    res.status(201).json({
-        message: 'Posts fetched with success!',
-        posts: posts
-    })
+router.get("", (req, res, next)=>{
+    Post.find().paginate(req.query)
+        .then(({data, pagination})=>{
+            console.log('Pagination!')
+            console.log(data)
+            res.status(201).json({
+                message: 'Posts fetched with success!',
+                posts: data,
+                numberPosts: pagination.count
+            })
+        })
 })
 
 router.get('/:id', (req, res) => {
+    console.log('oki')
     Post.findById(req.params.id).then((postReturned) => {
         if (postReturned) {
             res.status(200).json(postReturned);

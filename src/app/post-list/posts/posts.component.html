@@ -1,0 +1,23 @@
+<mat-accordion multi="true">
+  <div *ngFor="let post of posts">
+    <mat-expansion-panel class='post' hideToggle='false'>
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          <h3>{{ post.title }}</h3>
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+      <div class="pic-view align shadow-box" *ngIf="post.imagePath !== ''">
+        <img [src]="post.imagePath" [alt]="post.title">
+      </div>
+      <div class="shadow-box">
+        <p>{{ post.content }}</p>
+      </div>
+      <mat-action-row>
+        <a mat-button color="primary" [routerLink]="['edit', post.id]">EDIT</a>
+        <button mat-button color="warn" (click)="onDelete(post.id)">DELETE</button>
+      </mat-action-row>
+  </mat-expansion-panel>
+  </div>
+</mat-accordion>
+
+
