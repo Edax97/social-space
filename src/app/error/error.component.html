@@ -1,0 +1,9 @@
+<h1 mat-dialog-title color="accent">An error ocurred!</h1>
+<mat-dialog-content>
+    <p>{{data.message}}</p>
+</mat-dialog-content>
+<mat-dialog-actions align="center">
+    <button mat-button color="accent" mat-dialog-close>Close</button>
+    <button *ngIf="isLogged$|async" mat-stroked-button color="accent" mat-dialog-close (click)="onLogOut()">Logout</button>
+    
+</mat-dialog-actions>

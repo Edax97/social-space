@@ -9,6 +9,8 @@ import { Post } from '../../models';
 })
 export class PostsComponent implements OnInit {
   @Input() posts!: Post[];
+  @Input() isLogged: boolean = false;
+  @Input() userId: string = '';
   @Output('delete') idEvent = new EventEmitter<string>();
   
   ngOnInit(): void {

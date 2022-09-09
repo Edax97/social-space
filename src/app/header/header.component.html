@@ -1,12 +1,20 @@
 
 <mat-toolbar color="primary">
-  <button mat-icon-button>
+  <button mat-icon-button (click)="toggleSidenav()">
     <mat-icon>menu</mat-icon>
   </button>
-  <span class='main-link'> <a [routerLink]="['']">My Posts</a>
+  <span> <a id='main-link' mat-button [routerLink]="['']">{{ username$|async }}</a>
   </span>
   <span class='space'></span>
+  <div *ngIf="(isLogged$ | async) else notLogged">
+    <a mat-button [routerLink]="['/create']" routerLinkActive="active">New post</a>
+    <button mat-button (click)="logout()">Sign out</button>
+  </div>
+  <ng-template #notLogged>
+    <a mat-button [routerLink]="['/login']" routerLinkActive="active">Login</a>
+    <a mat-button [routerLink]="['/signup']" routerLinkActive="active">Sign up</a>  
+  </ng-template>
+  <mat-slide-toggle (click)="toggleTheme()"></mat-slide-toggle>
   
-  <a mat-button [routerLink]="['create']" routerLinkActive="active">New post</a>
-  <a mat-button [routerLink]="['login']" routerLinkActive="active">Login</a>
+
 </mat-toolbar>

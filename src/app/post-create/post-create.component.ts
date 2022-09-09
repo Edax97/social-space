@@ -1,8 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, NgForm, Validators } from "@angular/forms";
 import { ActivatedRoute } from '@angular/router';
-import { PostsService } from '../posts.service';
-import { Post} from '../models';
+import { PostsService } from './posts.service';
 import { mimeType } from './mime-type.validator';
 
 @Component({
@@ -85,5 +84,10 @@ export class PostCreate implements OnInit{
       this.service.updatePost(this.postId, this.form.value.title, this.form.value.content, this.form.value.image);
     }  
     this.form.reset();
+  }
+
+  onCancel(): void{
+    this.isLoading = true;
+    this.service.returnList();
   }
 }

@@ -26,8 +26,9 @@
       </mat-error>
     </mat-form-field> 
     <br>
-    <div>
-      <button mat-raised-button type="submit"
+    <div class = 'buttons'>
+      <button mat-stroked-button color="warn" type="button" (click)="onCancel()">Cancel</button>
+      <button mat-raised-button class="save" type="submit"
       color="primary">{{ mode === 'create'? 'New': 'Update'}} post</button>
     </div>
     

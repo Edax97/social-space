@@ -1,104 +1,24 @@
 const express = require('express');
 const multer = require('multer');
-const fs = require('fs');
-const Post = require('../models/post.model');
-
-
+const authCheck = require('./auth.middleware');
 const router = express.Router();
+const upload = multer({dest: 'images/'});
 
-const exts = {
-    'image/jpeg': '.jpeg',
-    'image/jpg': '.jpg',
-    'image/png': '.png'
-}
+const {getPost, getPosts, createPost, updatePost, deletePost} = require('./posts.controllers')
 
-const upload = multer({dest: 'images/'})
+//Retrieve posts
+router.get("", getPosts)
 
-router.post('', upload.single('image'), async (req, res) => {
-    const url = req.protocol + '://' + req.get('host');
-    let path = '';
-    if (req.file){
-        path = (url + '/' + req.file.path)
-    }
-    
-    const post = new Post({
-        title: req.body.title, 
-        content: req.body.content,
-        imagePath: path
-    })
-    post.save()
-        .then(savedPost => {
-            console.log('Post added successfully')
-            res.status(200).json({
-                message: 'Post added successfully',
-                postId: savedPost._id,
-                imagePath: post.imagePath
-            })
-        })
-        .catch(e => console.log(e))
-    
-});
+//Retrieve post by Id
+router.get('/:id', getPost);
 
-router.get("", (req, res, next)=>{
-    Post.find().paginate(req.query)
-        .then(({data, pagination})=>{
-            console.log('Pagination!')
-            console.log(data)
-            res.status(201).json({
-                message: 'Posts fetched with success!',
-                posts: data,
-                numberPosts: pagination.count
-            })
-        })
-})
+//New post
+router.post('', authCheck, upload.single('image'), createPost);
 
-router.get('/:id', (req, res) => {
-    console.log('oki')
-    Post.findById(req.params.id).then((postReturned) => {
-        if (postReturned) {
-            res.status(200).json(postReturned);
-        } else {
-            res.status(404).json({message: 'Post not found!'});
-        }
-    })
-});
+//Update post
+router.put('/:id', authCheck, upload.single('image'), updatePost);
 
-router.put('/:id', upload.single('image'),(req, res) => {
-    console.log(req.file, req.body);
-    const url = req.protocol + '://' + req.get('host');
-    let path = req.body.image ?? '';
-    if (req.file){
-        path = (url + '/' + req.file.path)
-    }
-    const post = new Post({
-        _id: req.params.id,
-        title: req.body.title,
-        content: req.body.content,
-        imagePath: path
-    });
-    Post.updateOne({_id: req.params.id}, post)
-        .then(mongoRes => {
-            console.log(mongoRes);
-            res.status(201).json({
-                message: 'Post updated'
-            })
-        })
-});
-
-router.delete('/:id', (req, res) => {
-    Post.deleteOne({_id: req.params.id})
-        .then(mongoRes => {
-            console.log(mongoRes);
-            res.status(200).json({
-                message: 'Post successfully deleted'
-            })
-        })
-        .catch(e => {
-            console.log(e);
-            res.status(400).json({
-                message: 'Deletion failed'
-            })
-        })
-});
+//Delete post
+router.delete('/:id', authCheck, deletePost);
 
 module.exports = router;

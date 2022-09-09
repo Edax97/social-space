@@ -11,16 +11,23 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatListModule } from '@angular/material/list';
 import { MatExpansionModule  } from '@angular/material/expansion';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
-import {MatPaginatorModule} from '@angular/material/paginator'; 
+import {MatPaginatorIntl, MatPaginatorModule} from '@angular/material/paginator'; 
+import {MatSlideToggleModule} from '@angular/material/slide-toggle'; 
+import {MatDialogModule} from '@angular/material/dialog'; 
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { PostCreate } from "./post-create/post-create.component";
 import { HeaderComponent } from './header/header.component';
 import { PostListComponent } from './post-list/post-list.component';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { PostsComponent } from './post-list/posts/posts.component';
-import { LoginComponent } from './login/login.component';
+import { AuthModule } from './auth/auth.module';
+import { AuthInterceptor } from './auth/auth-interceptor.service';
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { PaginatorCustomService } from './paginator-custom/paginator-custom.service';
+import { ErrorInterceptor } from './error-interceptor';
+import { ErrorComponent } from './error/error.component';
 
 
 @NgModule({
@@ -30,11 +37,10 @@ import { LoginComponent } from './login/login.component';
     PostListComponent,
     HeaderComponent,
     PostsComponent,
-    LoginComponent
+    ErrorComponent,
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule,
     FormsModule,
     ReactiveFormsModule,
     BrowserAnimationsModule,
@@ -48,9 +54,19 @@ import { LoginComponent } from './login/login.component';
     MatExpansionModule,
     HttpClientModule,
     MatProgressSpinnerModule,
-    MatPaginatorModule
+    MatPaginatorModule,
+    MatSlideToggleModule,
+    MatSidenavModule,
+    AuthModule,
+    AppRoutingModule,
+    MatDialogModule,
   ],
-  providers: [],
-  bootstrap: [AppComponent]
+  providers: [
+    {provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true},
+    {provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true},
+    {provide: MatPaginatorIntl, useClass: PaginatorCustomService}
+  ],
+  bootstrap: [AppComponent],
+  entryComponents: [ErrorComponent]
 })
 export class AppModule { }

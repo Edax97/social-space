@@ -1,39 +1,64 @@
-@use '@angular/material' as mat;
-@use "sass:map";
-@include mat.core();
-
+/*
+Breakpoints
+*/
+$breakpoints: (
+  'small':  767px,
+  'medium': 992px,
+  'large':  1200px
+) !default;
+@mixin respond-to($breakpoint) {
+  @if map-has-key($breakpoints, $breakpoint) {
+    @media (min-width: map-get($breakpoints, $breakpoint)) {
+      @content;
+    }
+  }
+}
 
 $alert: #f44336;
-$pink-palette: mat.$pink-palette;
-@debug map.get($pink-palette, '400');
+
 mat-card{
   
+
   mat-form-field{
     width: 97%;
-    margin: auto;
+    margin: 0.5rem auto;
     display: block;
+    .mat-input-element{
+      line-height: 150%;
+    }
   }
   .align{
     margin-left: 1.5%;
     margin-bottom: 1rem;
   }
-  button[type='submit']{
-    display: block;
-    margin: 0 auto;
+  
+  .buttons{
+    display: flex;
+    justify-content: center;
+    button{
+      margin: 0.5rem;
+    }
   }
+
   input[type='file']{
     visibility: hidden;
   }
   .preview-image{
-    height: 8rem;
+    width: 90%;
+    padding-bottom: 1rem;
+    @include respond-to('medium'){
+      width: 70%;
+    }
+    @include respond-to('large'){
+      width: 50%;
+    }
     img{
-      height: 100%;
+      width: 100%;
     }
   }
 
   &.not-found{
-    background: map.get($pink-palette, 50);
-    color: map.get($pink-palette, 400);
+    color: $alert;
   }
 }
 
