@@ -1,32 +1,33 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { AuthRoutingModule } from './auth-routing.module';
-import { LoginComponent } from './login/login.component';
 import { HttpClientModule } from '@angular/common/http';
-import { FormsModule } from '@angular/forms';
+import { FormsModule,ReactiveFormsModule, } from '@angular/forms';
 
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { FormComponent } from './form/form.component';
-import { SignupComponent } from './signup/signup.component';
 import { AngularMaterialModule } from '../angular-material.module';
+import { PostsRoutingModule } from './posts-routing.module';
+import { PostCreate } from './post-create/post-create.component';
+import { PostListComponent } from './post-list/post-list.component';
+import { PostsComponent } from './posts/posts.component';
 
 
 @NgModule({
   declarations: [
-    LoginComponent,
-    FormComponent,
-    SignupComponent
+    PostCreate,
+    PostListComponent,
+    PostsComponent
   ],
   imports: [
     CommonModule,
     BrowserModule,
+    ReactiveFormsModule,
     FormsModule,
     BrowserAnimationsModule,
     AngularMaterialModule,
     HttpClientModule,
-    AuthRoutingModule,
+    PostsRoutingModule
   ]
 })
-export class AuthModule { }
+export class PostsModule { }

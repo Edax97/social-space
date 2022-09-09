@@ -1,7 +1,6 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { Observable } from 'rxjs';
 import { AuthService } from './auth/auth.service';
-import { Post } from './models'
 import { ThemingService } from './theming.service';
 
 @Component({

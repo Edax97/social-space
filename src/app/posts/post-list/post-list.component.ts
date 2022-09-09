@@ -1,11 +1,11 @@
-import { Component, OnInit, OnDestroy} from '@angular/core';
+import { Component, OnInit} from '@angular/core';
 import { Post } from '../models';
-import { PostsService } from '../post-create/posts.service';
-import { Observable, Subscription } from "rxjs";
+import { PostsService } from '../posts.service';
+import { Observable } from "rxjs";
 import { PageEvent } from '@angular/material/paginator';
 import { NumberInput } from '@angular/cdk/coercion';
 import { ActivatedRoute, Router } from '@angular/router';
-import { AuthService } from '../auth/auth.service';
+import { AuthService } from '../../auth/auth.service';
 
 @Component({
   selector: 'app-post-list',
@@ -38,7 +38,7 @@ export class PostListComponent implements OnInit{
       else{
         this.currentPage = 1;
       }
-      
+      console.log(this.currentPage, this.postsPerPage)
       this.service.getPosts(this.postsPerPage, this.currentPage);
     })
     
