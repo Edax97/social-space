@@ -2,7 +2,8 @@ const User = require('../models/user.model');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
-exports.loginUser = (req, res, next) => {
+
+exports.signupUser = (req, res, next) => {
     bcrypt.hash(req.body.password, 10)
         .then(hash => {
             //req.body has mail, password, username, name, lastname
@@ -21,11 +22,13 @@ exports.loginUser = (req, res, next) => {
                     if (e.errors.mail.kind == 'unique'){
                         res.status(401).json({message: 'Email address already in use.'});
                     }
-                    res.status(401).json({message: 'Invalid credentials'})})
+                    else{
+                        res.status(401).json({message: 'Invalid credentials'})
+                    }})
         })
 }
 
-exports.signupUser = (req, res) => {
+exports.loginUser = (req, res) => {
     let userFetched;
     User.findOne({mail: req.body.mail})
         .then(user => {
@@ -37,7 +40,7 @@ exports.signupUser = (req, res) => {
         .then(pss_res => {
             if (!pss_res){ return send_error(res, 'Login')}
             const token = jwt.sign({mail: userFetched.mail, id: userFetched._id},
-                'acsdjncanjkcasjkjksacnakjsc',
+                process.env.JWT_KEY,
                 {expiresIn: '1h'}
                 );
             res.status(200).json({expiresIn: 3600, token: token, 

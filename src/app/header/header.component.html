@@ -11,8 +11,8 @@
     <button mat-button (click)="logout()">Sign out</button>
   </div>
   <ng-template #notLogged>
-    <a mat-button [routerLink]="['/login']" routerLinkActive="active">Login</a>
-    <a mat-button [routerLink]="['/signup']" routerLinkActive="active">Sign up</a>  
+    <a mat-button [routerLink]="['/auth/login']" routerLinkActive="active">Login</a>
+    <a mat-button [routerLink]="['/auth/signup']" routerLinkActive="active">Sign up</a>  
   </ng-template>
   <mat-slide-toggle (click)="toggleTheme()"></mat-slide-toggle>
   

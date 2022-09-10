@@ -4,6 +4,10 @@ import { BehaviorSubject, Subject } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { map } from 'rxjs/operators'
 import { Router } from '@angular/router';
+
+import { environment } from "src/environments/environment";
+const BACKEND_URL = environment.API_URL + 'posts/';
+
 @Injectable({
   providedIn: 'root'
 })
@@ -35,7 +39,7 @@ export class PostsService {
     
     this.isLoading.next(true);
     this.http.get<{message: string, posts: Array<any>, numberPosts: number}>
-      ('http://localhost:3000/api/posts/'+queryParams)
+      (BACKEND_URL+queryParams)
       .pipe(map(postData => {
         return {posts : postData.posts.map(post => {
           return{
@@ -58,7 +62,7 @@ export class PostsService {
 
   getPost(postId: string): any{
     return this.http.get<any>
-    ('http://localhost:3000/api/posts/'+postId);
+    (BACKEND_URL+postId);
   }
   
   addPost(title: string, content: string, image: File|string) {
@@ -69,7 +73,7 @@ export class PostsService {
     console.log('image type', image);
 
     this.http.post<{ message: string, postId: string, imagePath: string }>
-      ('http://localhost:3000/api/posts',  postData )
+      (BACKEND_URL,  postData )
       .subscribe(res => {
         this.router.navigate(['/'], {queryParams: {displayed: this.displayed, page: this.lastPage()}});
       })
@@ -81,7 +85,7 @@ export class PostsService {
     postData.append('content', content);
     postData.append('image', image);
     this.http.put<{message: string, imagePath: string}>
-    ('http://localhost:3000/api/posts/'+postId, postData)
+    (BACKEND_URL+postId, postData)
     .subscribe(res => {
       console.log(res);
       this.router.navigate(['/'], {queryParams: {displayed: this.displayed, page: this.page}});
@@ -91,7 +95,7 @@ export class PostsService {
 
   deletePost(postId: string){
     this.http.delete<{ message: string}>
-    (`http://localhost:3000/api/posts/${ postId }`)
+    (BACKEND_URL+ postId)
     .subscribe(res =>{
       console.log(res.message);
       this.posts = this.posts.filter(post => post.id !== postId);

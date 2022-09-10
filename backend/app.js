@@ -2,15 +2,17 @@ const express = require('express');
 const postsRoutes = require('./routes/posts.routes')
 const userRoutes = require('./routes/user.routes');
 
+
+
 const mongoose = require('mongoose');
-mongoose.connect('mongodb+srv://edmar-admin:Js6P9a1C07lNaZVO@cluster0.n2nfn6d.mongodb.net/angularDB')
+mongoose.connect(`mongodb+srv://edmar-admin:${ process.env.MONGO_ATLAS_KEY }@cluster0.n2nfn6d.mongodb.net/angularDB`)
       .then((res) => {console.log("Succesfully connected to angularDB")});
 
 const app = express();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-app.use('/images', express.static('images'));
+app.use('/images', express.static('backend/images'));
 
 app.use((req, res, next) => {
 res.setHeader("Access-Control-Allow-Origin", "*");

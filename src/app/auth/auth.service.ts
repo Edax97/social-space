@@ -3,6 +3,8 @@ import { Injectable } from "@angular/core";
 import { Router } from "@angular/router";
 import { BehaviorSubject } from "rxjs";
 import { AuthModel, LoginModel } from "./auth.model";
+import { environment } from "src/environments/environment";
+const BACKEND_URL = environment.API_URL + 'user/';
 
 @Injectable({
     providedIn: 'root'
@@ -28,7 +30,7 @@ export class AuthService{
     }
     createUser(user: AuthModel): void{
         this.http.post
-         ('http://localhost:3000/api/user/signup',  user ).subscribe({
+         (BACKEND_URL+'signup',  user ).subscribe({
             next: res=>{
                console.log('Signup response:',res);
                this.loginUser(user);
@@ -41,7 +43,7 @@ export class AuthService{
     }
     loginUser(user: LoginModel): void{
         this.http.post<any>
-        ('http://localhost:3000/api/user/login',  user ).subscribe({
+        (BACKEND_URL+'login',  user ).subscribe({
             next: res=>{
                 console.log('Login response:', res);
                 if (res.token) {
