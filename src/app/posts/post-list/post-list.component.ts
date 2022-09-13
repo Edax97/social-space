@@ -6,6 +6,7 @@ import { PageEvent } from '@angular/material/paginator';
 import { NumberInput } from '@angular/cdk/coercion';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from '../../auth/auth.service';
+import { AuthModel } from 'src/app/auth/auth.model';
 
 @Component({
   selector: 'app-post-list',
@@ -15,6 +16,8 @@ import { AuthService } from '../../auth/auth.service';
 export class PostListComponent implements OnInit{
   isLoading$ : Observable<boolean>;
   isLogged$: Observable<boolean>;
+  isProfile = false;
+  profile$ : Observable<any>;
   userId$: Observable<string>;
   postsData$: Observable<{posts: Post[], maxPosts: NumberInput}>;
   currentPage = 1;
@@ -24,8 +27,21 @@ export class PostListComponent implements OnInit{
     [this.postsData$, this.isLoading$] = this.service.getUpdateListener();
     this.isLogged$ = this.authService.getLoggedListener();
     this.userId$ = this.authService.getIdListener();
+    this.profile$ = this.service.getProfileListener();
   }
   ngOnInit(){
+    this.route.paramMap.subscribe(params => {
+      if (params.has('profile')){
+        this.isProfile = true;
+        this.queryHandling(params.get('profile'))
+      } else {
+        this.isProfile = false;
+        this.queryHandling();
+      }
+    })
+  }
+
+  queryHandling(profile?: string){
     this.route.queryParamMap.subscribe(params => {
       if (params.has('page')){
         console.log('Page: ', params.get('page'));
@@ -39,14 +55,20 @@ export class PostListComponent implements OnInit{
         this.currentPage = 1;
       }
       console.log(this.currentPage, this.postsPerPage)
-      this.service.getPosts(this.postsPerPage, this.currentPage);
+      if (this.isProfile){
+        this.service.getProfilePosts(profile, this.postsPerPage, this.currentPage)
+      } else {
+        this.service.getPosts(this.postsPerPage, this.currentPage);
+      }
     })
-    
-    
   }
 
   onDelete(id: string){
     this.service.deletePost(id);
+  }
+
+  onUpvote(voteInfo: [postId: string, userId: string]){
+    this.service.likePost(...voteInfo);
   }
 
   onPage(data: PageEvent){

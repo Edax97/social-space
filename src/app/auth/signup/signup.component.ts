@@ -10,7 +10,9 @@ import { AuthService } from '../auth.service';
 export class SignupComponent implements OnInit, OnDestroy {
   loading = false;
   fields = [
-    {holder: 'Username', fieldname: 'username', required: true},
+    {holder: 'Email', fieldname: 'mail', required: true, type: 'email'},
+    {holder: 'Password', fieldname: 'password', required: true, type: 'password'},
+    {holder: 'Username', fieldname: 'username', required: true, },
     {holder: 'First name', fieldname: 'name', required: false},
     {holder: 'Last name', fieldname: 'lastname', required: false},
   ];

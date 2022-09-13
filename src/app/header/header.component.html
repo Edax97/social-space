@@ -1,20 +1,23 @@
 
 <mat-toolbar color="primary">
+ 
   <button mat-icon-button (click)="toggleSidenav()">
     <mat-icon>menu</mat-icon>
   </button>
-  <span> <a id='main-link' mat-button [routerLink]="['']">{{ username$|async }}</a>
+  <span> <a id='main-link' mat-button [routerLink]="['']">Home</a>
   </span>
   <span class='space'></span>
-  <div *ngIf="(isLogged$ | async) else notLogged">
-    <a mat-button [routerLink]="['/create']" routerLinkActive="active">New post</a>
-    <button mat-button (click)="logout()">Sign out</button>
+  <div class="routes">
+    <div *ngIf="(isLogged$ | async) else notLogged">
+      <a [routerLink]="['/profile', userId$|async]" class="me-3">{{ username$|async }}</a>
+      <a mat-button [routerLink]="['/create']" routerLinkActive="active" class="me-2">New post</a>
+      <button mat-button (click)="logout()" class="me-2">Sign out</button>
+    </div>
+    <ng-template #notLogged>
+      <a mat-button [routerLink]="['/auth/login']" routerLinkActive="active" class="me-2">Login</a>
+      <a mat-button [routerLink]="['/auth/signup']" routerLinkActive="active" class="me-2">Sign up</a>  
+    </ng-template>
   </div>
-  <ng-template #notLogged>
-    <a mat-button [routerLink]="['/auth/login']" routerLinkActive="active">Login</a>
-    <a mat-button [routerLink]="['/auth/signup']" routerLinkActive="active">Sign up</a>  
-  </ng-template>
   <mat-slide-toggle (click)="toggleTheme()"></mat-slide-toggle>
-  
 
 </mat-toolbar>

@@ -20,7 +20,12 @@ const postSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
     requires: [1]
-  }
+  },
+  likes: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+  }]
+
 });
 
 postSchema.plugin(PaginatePlugin, {limit: 10})

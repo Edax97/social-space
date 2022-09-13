@@ -12,7 +12,7 @@ const PaginatePlugin = (schema, options) => {
       const offset = (pagination.page - 1) * pagination.size
   
       const [data, count] = await Promise.all([
-        this.limit(pagination.size).skip(offset),
+        this.sort({_id: -1}).limit(pagination.size).skip(offset),
         this.model.countDocuments(this.getQuery())
       ]);
       pagination.count = count;

@@ -6,6 +6,7 @@ import { map } from 'rxjs/operators'
 import { Router } from '@angular/router';
 
 import { environment } from "src/environments/environment";
+import { AuthModel } from '../auth/auth.model';
 const BACKEND_URL = environment.API_URL + 'posts/';
 
 @Injectable({
@@ -20,23 +21,49 @@ export class PostsService {
   private isLoading = new BehaviorSubject<boolean>(true);
 
   //For pagination persistence when instancing new post list
+  profile = [''];
   private displayed: number = 5;
   private page: number = 1;
+  private retProfile = new BehaviorSubject<any>({});
 
   constructor(private http: HttpClient, private router: Router) { }
 
   getUpdateListener(): Array<any>{
     return [this.postsUpdated.asObservable(), this.isLoading.asObservable()];
   }
+
+  getProfileListener(){
+    return this.retProfile.asObservable();
+  }
   
-  getPosts(postsPerPage?: number, currentPage?: number) {
+  getPosts(postsPerPage?: number, currentPage?: number): void {
     let queryParams = '';
     if (postsPerPage && currentPage){
       queryParams = `?size=${postsPerPage}&page=${currentPage}`;
       this.displayed = postsPerPage;
       this.page = currentPage;
+      this.profile = [''];
     }
-    
+    this.queryGetPosts(queryParams);
+  }
+
+  getProfilePosts(profileId: string, postsPerPage?: number, currentPage?: number) {
+    let queryParams = '';
+    if (postsPerPage && currentPage){
+      queryParams = `?size=${postsPerPage}&page=${currentPage}&profileId=${profileId}`;
+      this.displayed = postsPerPage;
+      this.page = currentPage;
+      this.profile = ['profile', profileId];
+    }
+    this.getProfile(profileId).subscribe(prof => {
+      console.log('Profile obtained', prof)
+      this.retProfile.next(prof);
+      this.queryGetPosts(queryParams);
+    })
+
+  }
+
+  queryGetPosts(queryParams){
     this.isLoading.next(true);
     this.http.get<{message: string, posts: Array<any>, numberPosts: number}>
       (BACKEND_URL+queryParams)
@@ -47,7 +74,8 @@ export class PostsService {
             content: post.content,
             id: post._id,
             imagePath: post.imagePath,
-            userId: post.userId ,
+            userId: post.userId,
+            likes: post.likes
           }
         }), number: postData.numberPosts};
       }))
@@ -75,7 +103,7 @@ export class PostsService {
     this.http.post<{ message: string, postId: string, imagePath: string }>
       (BACKEND_URL,  postData )
       .subscribe(res => {
-        this.router.navigate(['/'], {queryParams: {displayed: this.displayed, page: this.lastPage()}});
+        this.router.navigate(['/', ...this.profile], {queryParams: {displayed: this.displayed, page: '1'}});
       })
   }
 
@@ -88,7 +116,7 @@ export class PostsService {
     (BACKEND_URL+postId, postData)
     .subscribe(res => {
       console.log(res);
-      this.router.navigate(['/'], {queryParams: {displayed: this.displayed, page: this.page}});
+      this.router.navigate(['/', ...this.profile], {queryParams: {displayed: this.displayed, page: this.page}});
     })
 
   }
@@ -99,17 +127,36 @@ export class PostsService {
     .subscribe(res =>{
       console.log(res.message);
       this.posts = this.posts.filter(post => post.id !== postId);
+      this.postsUpdated.next({posts: [...this.posts], maxPosts: this.postCount-1});
+    })
+  }
+
+  likePost(postId: string, userId: string){
+    this.http.put<{ message:string }>
+    (BACKEND_URL+'likes/'+postId, {userId})
+    .subscribe(res => {
+      console.log('Liking post: ', res);
+      this.posts = this.posts.map(post => {
+        if (post.id !== postId) { return post; }
+        if (res.message === 'upvote'){
+          post.likes.push(userId);
+        } else {
+          post.likes = post.likes.filter(u => u != userId);
+        }
+        return post;
+      })
       this.postsUpdated.next({posts: [...this.posts], maxPosts: this.postCount});
     })
   }
 
   returnList(){
-    this.router.navigate(['/'], {queryParams: {displayed: this.displayed, page: this.page}});
+    this.router.navigate(['/', ...this.profile], {queryParamsHandling: 'preserve'});
   }
 
-  lastPage(){
-    console.log('Count: ',this.postCount,'Displayed: ', this.displayed)
-    const _aux = (this.postCount)/this.displayed;
-    return (_aux | 0)+1;
+  getProfile(profileId: string){
+    return this.http.get<AuthModel>
+      (environment.API_URL+'user/profile/'+`?profileId=${profileId}`)
   }
+
+  
 }

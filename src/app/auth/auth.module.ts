@@ -6,16 +6,19 @@ import { LoginComponent } from './login/login.component';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 
+
 import { FormComponent } from './form/form.component';
 import { SignupComponent } from './signup/signup.component';
 import { AngularMaterialModule } from '../angular-material.module';
+import { UpdateProfileComponent } from './update-profile/update-profile.component';
 
 
 @NgModule({
   declarations: [
     LoginComponent,
     FormComponent,
-    SignupComponent
+    SignupComponent,
+    UpdateProfileComponent
   ],
   imports: [
     CommonModule,

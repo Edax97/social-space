@@ -9,7 +9,7 @@ import { NgForm } from '@angular/forms';
 export class FormComponent implements OnInit {
   @Input() isLoading! : boolean;
   @Input() buttonLabel! : string;
-  @Input() fieldList : {holder: string, fieldname: string, required: boolean}[] = [];
+  @Input() fieldList : {holder: string, fieldname: string, required: boolean, type?: string, value?: string}[] = [];
 
   @Output('user') userData = new EventEmitter<{mail: string, password: string}>();
   constructor() { }
@@ -21,7 +21,6 @@ export class FormComponent implements OnInit {
     console.log(form.value);
     if (form.valid){
       this.userData.emit(form.value);
-
     }
   }
 

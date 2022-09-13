@@ -3,5 +3,6 @@ export interface Post{
   title: string,
   content: string,
   imagePath?: string,
-  userId: string,
+  userId: any,
+  likes: string[]
 }

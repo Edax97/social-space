@@ -44,8 +44,72 @@ exports.loginUser = (req, res) => {
                 {expiresIn: '1h'}
                 );
             res.status(200).json({expiresIn: 3600, token: token, 
-                userData: userFetched,
+                userData: (userFetched),
             });
         })
         .catch(() => {res.status(401).json({message: 'Invalid credentials!'})})
+}
+
+exports.updateUser = (req, res, next) => {
+    let retUser, hashedPss;
+    console.log('Update request', req.body)
+    User.findOne({mail: req.body.mail})
+        .then(user => {
+            if (!user){
+                res.status(401).json({message: 'User not registered.'})
+            } else {
+                retUser = user;
+                return bcrypt.compare(req.body.password, retUser.password)
+            }
+        })
+        .then(samePss => {
+            console.log('Same password', samePss)
+            if (!samePss) {
+                return res.status(401).json({message: 'Incorrect password!'})
+            }
+            if (req.body.newpassword){
+                return bcrypt.hash(req.body.newpassword, 10);
+            }
+            return new Promise((resolve)=>{
+                console.log('Promise');
+                resolve(null);
+            });
+        })
+        .then(hash => {
+            console.log('Hash', hash)
+            const updatedPost = {
+                mail: retUser.mail,
+                password: hash ?? retUser.password,
+                username: req.body.username ?? retUser.username,
+                name: req.body.name ?? retUser.name,
+                lastname: req.body.lastname ?? retUser.lastname
+            }
+            return User.updateOne({mail: req.body.mail}, updatedPost);
+        })
+        .then(dbRes => {
+            console.log('update response',dbRes);
+            res.status(201).json({message: 'Profile updated'})
+        })
+        .catch(e => {
+            console.log(e);
+            res.status(400).json({message: 'Error updating profile.'})
+        })
+}
+
+exports.getProfile = (req, res) => {
+    console.log('Req params', req.query.profileId)
+    User.findById(req.query.profileId)
+        .then(user => {
+            
+            sentUser = {
+                ...user._doc,
+                password: ''
+            }
+            console.log(sentUser)
+            res.status(200).json(sentUser)
+        }
+        )
+        .catch((e) => {
+            console.log(e)
+            res.status(401).json({message: 'User does not exists!'})})
 }

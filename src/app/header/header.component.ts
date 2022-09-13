@@ -13,6 +13,8 @@ import { ThemingService } from '../theming.service';
 export class HeaderComponent implements OnInit{
   public isLogged$: Observable<boolean>;
   public username$: Observable<string>;
+  public userId$: Observable<string>;
+
   @Output('menu') toggleNav = new EventEmitter<boolean>();
 
   isHandset$: Observable<boolean> = this.breakpointObserver.observe(Breakpoints.Handset)
@@ -23,6 +25,7 @@ export class HeaderComponent implements OnInit{
 
   constructor(private breakpointObserver: BreakpointObserver, private authService: AuthService, private themingService: ThemingService) {
     this.isLogged$ = this.authService.getLoggedListener();
+    this.userId$ = this.authService.getIdListener();
     this.username$ = this.authService.getUsernameListener();
   }
 

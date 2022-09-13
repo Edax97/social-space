@@ -8,12 +8,18 @@ import { Post } from '../models';
   styleUrls: ['./posts.component.scss']
 })
 export class PostsComponent implements OnInit {
+
   @Input() posts!: Post[];
   @Input() isLogged: boolean = false;
   @Input() userId: string = '';
   @Output('delete') idEvent = new EventEmitter<string>();
+  @Output('upvote') voteEvent = new EventEmitter<[postId: string, userId: string]>();
   
   ngOnInit(): void {
+  }
+
+  onUpvote(postId: string, userId: string) {
+    this.voteEvent.emit([postId, userId]);
   }
 
   onDelete(postId: string){

@@ -9,12 +9,18 @@ const exts = {
 }
 //Retrieve posts
 exports.getPosts = (req, res, next)=>{
-    Post.find().paginate(req.query)
+    console.log('Retrieving posts', req.query)
+    let filter = {};
+    if (req.query.profileId){
+        filter = { 'userId': req.query.profileId}
+    }
+    console.log(filter)
+    Post.find(filter).populate('userId').paginate(req.query)
         .then(({data, pagination})=>{
             //console.log(data)
             res.status(201).json({
                 message: 'Posts fetched with success!',
-                posts: data.reverse(),
+                posts: data,
                 numberPosts: pagination.count
             })
         })
@@ -22,6 +28,7 @@ exports.getPosts = (req, res, next)=>{
             res.status(500).json({message: 'Error getting posts'})
         })
 }
+
 
 //Retrieve post by Id
 exports.getPost = (req, res) => {
@@ -47,7 +54,8 @@ exports.createPost = async (req, res) => {
         title: req.body.title, 
         content: req.body.content,
         imagePath: path,
-        userId: req.userData.id
+        userId: req.userData.id,
+        likes: []
     })
     post.save()
         .then(savedPost => {
@@ -69,14 +77,9 @@ exports.updatePost = (req, res) => {
     if (req.file){
         path = (url + '/' + req.file.path)
     }
-    const post = new Post({
-        _id: req.params.id,
-        title: req.body.title,
-        content: req.body.content,
-        imagePath: path,
-        userId: req.userData.id
-    });
-    Post.updateOne({_id: req.params.id, userId: req.userData.id}, post)
+    
+    Post.updateOne({_id: req.params.id, userId: req.userData.id}, 
+                    {title: req.body.title, content: req.body.content, imagePath: path})
         .then(mongoRes => {
             console.log(mongoRes);
             if (mongoRes.modifiedCount > 0){
@@ -105,3 +108,23 @@ exports.deletePost = (req, res) => {
         .catch(() => {res.status(500).json({message: 'Error deleting post'})})
 
 };
+
+//Update Likes
+exports.updateLikes = (req, res) => {
+    console.log(req.body); //updown: boolean, userId: string;
+    Post.updateOne({_id: req.params.id}, {$addToSet: {likes: req.body.userId}})
+        .then((mRes) => {
+            console.log('Upvote:', mRes);
+            if (mRes.modifiedCount > 0){
+                res.status(201).json({message: 'upvote'});
+            } else {
+                Post.updateOne({_id: req.params.id}, {$pull: {likes: req.body.userId}})
+                    .then((mRes) => {
+                        console.log('Downvote:', mRes);
+                        res.status(201).json({message: 'downvote'});
+                    })
+                    .catch(() => {res.status(500).json({message: 'Error downvoting'})})
+            }
+        })
+        .catch(() => {res.status(500).json({message: 'Error when upvoting'})})
+}

@@ -11,13 +11,15 @@ import { PostsRoutingModule } from './posts-routing.module';
 import { PostCreate } from './post-create/post-create.component';
 import { PostListComponent } from './post-list/post-list.component';
 import { PostsComponent } from './posts/posts.component';
+import { ProfileListComponent } from './profile-list/profile-list.component';
 
 
 @NgModule({
   declarations: [
     PostCreate,
     PostListComponent,
-    PostsComponent
+    PostsComponent,
+    ProfileListComponent,
   ],
   imports: [
     CommonModule,

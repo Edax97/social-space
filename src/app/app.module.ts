@@ -16,6 +16,8 @@ import { MatPaginatorIntl } from '@angular/material/paginator';
 
 import { PostsModule } from './posts/posts.module';
 import { AppRoutingModule } from './app-routing.module';
+import { SidebarComponent } from './sidebar/sidebar.component';
+import { AuthModule } from './auth/auth.module';
 
 
 @NgModule({
@@ -23,6 +25,7 @@ import { AppRoutingModule } from './app-routing.module';
     AppComponent,
     HeaderComponent,
     ErrorComponent,
+    SidebarComponent,
   ],
   imports: [
     BrowserModule,
@@ -32,6 +35,7 @@ import { AppRoutingModule } from './app-routing.module';
     AngularMaterialModule,
     HttpClientModule,
     PostsModule,
+    AuthModule,
     AppRoutingModule,
     
   ],

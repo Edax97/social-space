@@ -1,8 +1,13 @@
 <mat-spinner *ngIf="isLoading$|async as isLoading else doneLoading"></mat-spinner>
 <ng-template #doneLoading>
+  <div *ngIf="isProfile">
+    <mat-card class="my-3">
+        <h2>{{(profile$|async).username}}'s posts</h2>
+    </mat-card>
+  </div>
   <div *ngIf="(postsData$ | async) as data">
     <app-posts [isLogged]="isLogged$ | async" [userId]="userId$ | async" [posts]="data.posts" 
-      (delete)="onDelete($event)">
+      (delete)="onDelete($event)" (upvote)="onUpvote($event)">
     </app-posts>
     <mat-paginator class="my-3" *ngIf="data.posts.length > 0" [pageIndex]="currentPage-1" [pageSize]="postsPerPage" [length]="data.maxPosts"  [pageSizeOptions]="[5,10,25,100]" (page)="onPage($event)">
 

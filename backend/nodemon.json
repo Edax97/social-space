@@ -1,0 +1,7 @@
+{
+    "env": {
+        "JWT_KEY": "acsdjncanjkcasjkjksacnakjsc",
+        "MONGO_ATLAS_URL": "mongodb+srv://edmar-admin:Js6P9a1C07lNaZVO@cluster0.n2nfn6d.mongodb.net/angularDB"
+        
+    }
+}

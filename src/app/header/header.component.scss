@@ -1,24 +1,46 @@
+/*
+Breakpoints
+*/
+$breakpoints: (
+  'extra-small': 360px,
+  'small':  767px,
+  'medium': 992px,
+  'large':  1200px
+) !default;
+@mixin respond-to($breakpoint) {
+  @if map-has-key($breakpoints, $breakpoint) {
+    @media (min-width: map-get($breakpoints, $breakpoint)) {
+      @content;
+    }
+  }
+}
+
 mat-toolbar{
   
   .space{
     flex: 1 1 auto;
   }
   #main-link{
-    font-size: 110%;
+    @include respond-to('small'){
+      font-size: 110%;
+    }
     font-weight: 500;
     letter-spacing: 0.5px;
     background: inherit;
   }
+  .routes{
+    visibility: hidden;
+    @include respond-to('small'){
+      visibility: visible;
+    }
+  }
   a, button{
-    margin-right: 1rem;
     text-decoration: none;
     color: inherit;
     &.mat-button{
       background: rgba(13, 10, 10, 0.15);
     }
   }
-  
-
   .active{
     box-shadow:#000000 0px 0px 8px 0px
   }

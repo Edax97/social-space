@@ -12,6 +12,10 @@ import { AuthService } from '../auth.service';
 export class LoginComponent implements OnInit, OnDestroy {
   loading = false;
   isLogged: Subscription;
+  fields = [
+    {holder: 'Email', fieldname: 'mail', required: true, type: 'email'},
+    {holder: 'Password', fieldname: 'password', required: true, type: 'password'},
+  ]
 
   constructor(private authService: AuthService) { 
   }

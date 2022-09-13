@@ -2,7 +2,9 @@
   <app-header (menu)="sidenav.toggle()">
   </app-header>
   <mat-sidenav-container class="vh-100 main-container">
-    <mat-sidenav mode="side" opened="false" #sidenav>Sidenav content</mat-sidenav>
+    <mat-sidenav mode="side" opened="false" #sidenav>
+      <app-sidebar></app-sidebar>
+    </mat-sidenav>
     <mat-sidenav-content>
       <main>
         <router-outlet></router-outlet>

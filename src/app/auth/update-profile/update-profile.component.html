@@ -1,0 +1,7 @@
+<mat-card>
+    <h2>Updating profile information</h2>
+</mat-card>
+
+<app-form [isLoading]="loading" [fieldList]="fields" buttonLabel="Update profile"
+    (user)="onUpdate($event)">
+</app-form>

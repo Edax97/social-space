@@ -5,14 +5,14 @@ const userRoutes = require('./routes/user.routes');
 
 
 const mongoose = require('mongoose');
-mongoose.connect(`mongodb+srv://edmar-admin:${ process.env.MONGO_ATLAS_KEY }@cluster0.n2nfn6d.mongodb.net/angularDB`)
+mongoose.connect(process.env.MONGO_ATLAS_URL)
       .then((res) => {console.log("Succesfully connected to angularDB")});
 
 const app = express();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-app.use('/images', express.static('backend/images'));
+app.use('/images', express.static('images'));
 
 app.use((req, res, next) => {
 res.setHeader("Access-Control-Allow-Origin", "*");

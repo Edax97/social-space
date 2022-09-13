@@ -1,20 +1,31 @@
 <mat-accordion multi="true">
   <div *ngFor="let post of posts">
-    <mat-expansion-panel class='post' hideToggle='false'>
+    <mat-expansion-panel class='post' hideToggle='true'>
       <mat-expansion-panel-header>
         <mat-panel-title>
           <h3>{{ post.title }}</h3>
         </mat-panel-title>
+        <div class="username">
+          <a mat-button color='primary' [routerLink]="['/profile', post.userId._id]">@{{post.userId.username}}</a>
+        </div>
       </mat-expansion-panel-header>
       <div class="pic-view align shadow-box" *ngIf="post.imagePath !== ''">
         <img [src]="post.imagePath" [alt]="post.title">
       </div>
       <div class="shadow-box">
         <p class="content">{{ (post.content) }}</p>
-      </div>
-      <mat-action-row *ngIf="(isLogged) && (userId === post.userId)">
-        <a mat-button color="primary" [routerLink]="['edit', post.id]">EDIT</a>
-        <button mat-button color="warn" (click)="onDelete(post.id)">DELETE</button>
+      </div>      
+      <mat-action-row>
+        <button class="me-auto" color="accent" mat-icon-button (click)="onUpvote(post.id, userId)">
+          <mat-icon>favorite</mat-icon>
+          <mat-label class="ms-1">{{post.likes.length}}</mat-label>
+        </button> 
+        
+        <span></span>
+        <span  *ngIf="(isLogged) && (userId === post.userId._id)">
+          <a mat-button color="primary" [routerLink]="['/edit', post.id]">EDIT</a>
+          <button mat-button color="warn" (click)="onDelete(post.id)">DELETE</button>
+        </span>
       </mat-action-row>
   </mat-expansion-panel>
   </div>

@@ -22,8 +22,11 @@ const userSchema = new mongoose.Schema({
   },
   lastname: {
     type: String,
-  }
-
+  },
+  posts: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Post',
+  }]
 });
 
 userSchema.plugin(uniqueValidator)

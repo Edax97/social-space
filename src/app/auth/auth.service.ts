@@ -1,7 +1,7 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Router } from "@angular/router";
-import { BehaviorSubject } from "rxjs";
+import { BehaviorSubject, Subject } from "rxjs";
 import { AuthModel, LoginModel } from "./auth.model";
 import { environment } from "src/environments/environment";
 const BACKEND_URL = environment.API_URL + 'user/';
@@ -13,6 +13,8 @@ export class AuthService{
     private isLogged = new BehaviorSubject<boolean>(false);
     private userId = new BehaviorSubject<string>('');
     private userName = new BehaviorSubject<string>('Home');
+    private userRet = new BehaviorSubject<AuthModel|null>(null);
+
     private token: string|null;
     private tokenTimer: any;
     constructor(private http: HttpClient, private router: Router){}
@@ -28,6 +30,10 @@ export class AuthService{
     getUsernameListener(){
         return this.userName.asObservable();
     }
+    getUserListener(){
+        return this.userRet.asObservable();
+    }
+    
     createUser(user: AuthModel): void{
         this.http.post
          (BACKEND_URL+'signup',  user ).subscribe({
@@ -39,8 +45,20 @@ export class AuthService{
                 this.isLogged.next(false);
             }
         })
-
     }
+
+    updateUser(modUser: AuthModel): void{
+        this.http.post
+        (BACKEND_URL+'update', modUser).subscribe(
+            res => {
+                console.log('Updating profile', modUser);
+                const logUser = {mail: modUser.mail, password: modUser.newpassword ?? modUser.password}
+                console.log('New user credential', logUser)
+                this.loginUser(logUser);
+            }
+        )
+    }
+
     loginUser(user: LoginModel): void{
         this.http.post<any>
         (BACKEND_URL+'login',  user ).subscribe({
@@ -65,6 +83,7 @@ export class AuthService{
         this.isLogged.next(true);
         this.userId.next(userData._id);
         this.userName.next(userData.username ?? userData.mail);
+        this.userRet.next(userData);
         this.router.navigate(['/']);
     }
     logoutUser(){
@@ -72,6 +91,8 @@ export class AuthService{
         this.isLogged.next(false);
         this.userId.next('');
         this.userName.next('Home');
+        this.userRet.next(null);
+
         localStorage.clear()
         clearTimeout(this.tokenTimer);
         this.router.navigate(['/']);
@@ -97,4 +118,5 @@ export class AuthService{
             this.localLogin(token, expTime - nowTime, userData);
         }
     }
+
 }
