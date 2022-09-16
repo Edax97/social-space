@@ -23,6 +23,21 @@ const userSchema = new mongoose.Schema({
   lastname: {
     type: String,
   },
+  bio: {
+    type: String,
+  },
+  profilepic: {
+    type: String,
+    default: ''
+  },
+  followers: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+  }],
+  following: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+  }],
   posts: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Post',

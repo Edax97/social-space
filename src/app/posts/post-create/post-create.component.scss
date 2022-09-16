@@ -2,9 +2,9 @@
 Breakpoints
 */
 $breakpoints: (
-  'small':  767px,
-  'medium': 992px,
-  'large':  1200px
+  'small':  576px,
+  'medium': 768px,
+  'large':  992px
 ) !default;
 @mixin respond-to($breakpoint) {
   @if map-has-key($breakpoints, $breakpoint) {
@@ -14,59 +14,24 @@ $breakpoints: (
   }
 }
 
-$alert: #f44336;
 
 mat-card{
-  
-
   mat-form-field{
-    width: 97%;
     margin: 0.5rem auto;
     display: block;
     .mat-input-element{
       line-height: 150%;
     }
   }
-  .align{
-    margin-left: 1.5%;
-    margin-bottom: 1rem;
-  }
-  
-  .buttons{
-    display: flex;
-    justify-content: center;
-    button{
-      margin: 0.5rem;
-    }
-  }
-
-  input[type='file']{
-    visibility: hidden;
-  }
   .preview-image{
-    width: 90%;
-    padding-bottom: 1rem;
+    width: 100%;
     @include respond-to('medium'){
       width: 70%;
     }
-    @include respond-to('large'){
-      width: 50%;
-    }
-    img{
-      width: 100%;
-    }
-  }
-
-  &.not-found{
-    color: $alert;
   }
 }
 
-.alert{
-  color: $alert;
-}
 
 .shadow-box{
   box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.4);
-  padding: 0.2rem;
 }

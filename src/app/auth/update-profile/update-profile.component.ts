@@ -10,12 +10,14 @@ import { AuthService } from '../auth.service';
 export class UpdateProfileComponent implements OnInit, OnDestroy {
   loading = false;
   fields = [
-    {holder: 'Email', fieldname: 'mail', required: true, type: 'mail'},
+    {holder: 'Email', fieldname: 'mail', required: true, type: 'mail', disabled: true},
     {holder: 'Current password', fieldname: 'password', required: true, type: 'password'},
-    {holder: 'New password', fieldname: 'newpassword', required: false, type: 'password'},
-    {holder: 'Username', fieldname: 'username', required: false, },
-    {holder: 'First name', fieldname: 'name', required: false},
-    {holder: 'Last name', fieldname: 'lastname', required: false},
+    {holder: 'New password', fieldname: 'newpassword', type: 'password'},
+    {holder: 'Username', fieldname: 'username'},
+    {holder: 'First name', fieldname: 'name'},
+    {holder: 'Last name', fieldname: 'lastname'},
+    {holder: 'Biography', fieldname: 'bio', multiline: true},
+    
   ];
   loggedSub: Subscription;
   profileSub: Subscription;

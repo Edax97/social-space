@@ -18,7 +18,7 @@ import { UpdateProfileComponent } from './update-profile/update-profile.componen
     LoginComponent,
     FormComponent,
     SignupComponent,
-    UpdateProfileComponent
+    UpdateProfileComponent,
   ],
   imports: [
     CommonModule,

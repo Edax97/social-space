@@ -4,20 +4,41 @@
   <button mat-icon-button (click)="toggleSidenav()">
     <mat-icon>menu</mat-icon>
   </button>
-  <span> <a id='main-link' mat-button [routerLink]="['']">Home</a>
-  </span>
+
+  <span> <a id='main-link' mat-icon-button [routerLink]="['']">
+    <mat-icon>home</mat-icon>
+  </a></span>
+
   <span class='space'></span>
-  <div class="routes">
-    <div *ngIf="(isLogged$ | async) else notLogged">
-      <a [routerLink]="['/profile', userId$|async]" class="me-3">{{ username$|async }}</a>
-      <a mat-button [routerLink]="['/create']" routerLinkActive="active" class="me-2">New post</a>
-      <button mat-button (click)="logout()" class="me-2">Sign out</button>
-    </div>
-    <ng-template #notLogged>
-      <a mat-button [routerLink]="['/auth/login']" routerLinkActive="active" class="me-2">Login</a>
-      <a mat-button [routerLink]="['/auth/signup']" routerLinkActive="active" class="me-2">Sign up</a>  
-    </ng-template>
+
+  <span class="d-sm-none">
+    <button mat-icon-button *ngIf="!(isLogged$ | async) else loggedSmall" 
+      [matMenuTriggerFor]="rtMenu">
+      <mat-icon>login</mat-icon>
+    </button>
+  </span>
+
+  <div class="routes d-none d-sm-block">
+    <div *ngIf="(isLogged$ | async); then logged else notLogged"></div>
   </div>
-  <mat-slide-toggle (click)="toggleTheme()"></mat-slide-toggle>
 
 </mat-toolbar>
+
+<!-- Templates -->
+<ng-template #loggedSmall>
+  <button mat-icon-button [routerLink]="['/create']">
+    <mat-icon class="material-symbols-outlined">add</mat-icon></button>
+</ng-template>
+<ng-template #logged>
+  <a [routerLink]="['/profile', userId$|async]" class="me-3 fs-6">{{ username$|async }}</a>
+  <a mat-button [routerLink]="['/create']" routerLinkActive="active" class="me-2">New post</a>
+  <button mat-button (click)="logout()" class="me-2">Sign out</button>
+</ng-template>
+<ng-template #notLogged>
+  <a mat-button [routerLink]="['/auth/login']" routerLinkActive="active" class="me-2">Login</a>
+  <a mat-button [routerLink]="['/auth/signup']" routerLinkActive="active" class="me-2">Sign up</a>  
+</ng-template>
+<mat-menu #rtMenu="matMenu">
+  <a mat-menu-item [routerLink]="['/auth/login']" routerLinkActive="active">Login</a>
+  <a mat-menu-item [routerLink]="['/auth/signup']" routerLinkActive="active">Sign up</a> 
+</mat-menu>

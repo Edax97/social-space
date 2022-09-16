@@ -1,7 +1,8 @@
 <mat-spinner *ngIf="isLoading"></mat-spinner>
 
-<mat-card *ngIf="(mode !== 'notFound' && !isLoading)">
+<mat-card class="px-3" *ngIf="(mode !== 'notFound' && !isLoading)">
   <form [formGroup]="form" (submit)="onSavePost()">
+    
     <mat-form-field>
       <input matInput type="text" formControlName="title" placeholder="Post Title" 
       required>
@@ -9,25 +10,37 @@
         Please enter a title.
       </mat-error>
     </mat-form-field>
-    <div class= 'align'>
-      <button mat-stroked-button type="button" (click)="filepicker.click()">Pick image</button>
-      <input type="file" #filepicker (change)="onFileSelected($event)">
+    
+    <input type="file" class="d-none" #filepicker (change)="onFileSelected($event)">
+
+    <div class="preview-image mt-2">
+      <div class="d-flex">
+        <button class="me-auto mb-2" mat-stroked-button type="button" (click)="filepicker.click()">Pick image</button>
+        <a mat-icon-button *ngIf="imagePreview !== ''" (click)="onCancelImage()" class="accent-text">
+          <mat-icon>cancel</mat-icon>
+        </a>
+      </div>
+
+      <div class= 'mb-4' *ngIf="imagePreview !== '' && imagePreview && form.get('image').valid">
+        <img class='shadow-box w-100' [src]="imagePreview" [alt]="form.value.image.name">
+      </div>
+      <div *ngIf="form.get('image').invalid"><p class='warn-text'>
+        Invalid file type!</p></div>
+
     </div>
-    <div class= 'preview-image align' *ngIf="imagePreview !== '' && imagePreview && form.get('image').valid">
-      <img class='shadow-box' [src]="imagePreview" [alt]="form.value.image.name">
-    </div>
-    <div class="align" *ngIf="form.get('image').invalid"><p class='alert'>Invalid file type!</p></div>
+    
     <mat-form-field>
-      <textarea matInput rows="6"
-        formControlName='content' placeholder="Post body" 
-        required></textarea>
+      <textarea matInput formControlName='content' 
+      placeholder="Post body" cdkTextareaAutosize></textarea>
       <mat-error>
         Please enter a body
       </mat-error>
     </mat-form-field> 
     <br>
-    <div class = 'buttons'>
-      <button mat-stroked-button color="warn" type="button" (click)="onCancel()">Cancel</button>
+    
+    <div class = 'd-flex justify-content-center'>
+      <button mat-stroked-button color="warn" type="button" 
+      (click)="onCancel()" class="me-4">Cancel</button>
       <button mat-raised-button class="save" type="submit"
       color="primary">{{ mode === 'create'? 'New': 'Update'}} post</button>
     </div>
@@ -35,6 +48,6 @@
   </form>
 </mat-card>
 
-<mat-card class='not-found' *ngIf="(mode === 'notFound' && !isLoading)">
+<mat-card class='warn-text' *ngIf="(mode === 'notFound' && !isLoading)">
   <h2>Post not found!</h2>
 </mat-card>

@@ -1,0 +1,29 @@
+
+<mat-expansion-panel class="mb-3 py-2" hideToggle="true">
+    <mat-expansion-panel-header>
+        <mat-panel-title class="fs-5">
+            {{profileInfo.username}}
+        </mat-panel-title>
+        <button mat-raised-button color="primary" *ngIf="!profileInfo.followers.includes(userId); else Following" 
+        (click)="onFollow()">Follow</button>
+
+        <ng-template #Following>
+            <button mat-button color="primary" (click)="onFollow()">Following</button>
+        </ng-template>
+        
+    </mat-expansion-panel-header>
+    <div class="p-2 shadow-box" *ngIf="profileInfo.bio">
+        <p>{{profileInfo.bio}}</p>
+    </div>
+    <div class="mt-3 fs-7" *ngIf="profileInfo.following">
+        <span class="primary-text">
+            {{profileInfo.following.length ?? 0}}
+        </span>
+        Following
+        
+        <span class="primary-text ms-4">
+            {{profileInfo.followers.length ?? 0}}
+        </span>
+            Followers
+    </div>
+</mat-expansion-panel>

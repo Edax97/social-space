@@ -1,5 +1,51 @@
-<div class="m-4 d-grid gap-2" *ngIf="logged$|async">
-    <div class="mx-auto">Update profile information</div>
-    <div class="mx-auto"></div>
-    <a mat-stroked-button color="accent" class="mx-auto" [routerLink]="['/edit-profile']">Update</a>
+<div class="m-4 d-grid gap-2">
+    
+    <div *ngIf="logged$|async else notLogged">
+        <div  *ngIf="logged$|async">
+            <a class="mx-auto" mat-button class="d-block" [routerLink]="['/profile', userId$|async]">
+                Profile
+            </a>
+            <hr>
+        </div>
+        <div  *ngIf="logged$|async">
+            <a class="mx-auto" mat-button class="d-block" [routerLink]="['/following']">
+                Following
+            </a>
+            <hr>
+        </div> 
+        <div>
+            <a class="mx-auto" mat-button class="d-block" color="accent"  [routerLink]="['/edit-profile']">
+                Update Profile</a>
+            <hr>
+        </div>
+        <div *ngIf="logged$|async" >
+            <a class="mx-auto" mat-button class="d-block" color="accent"  (click)="onSignOut()">
+                Sign Out</a>
+            <hr>
+        </div>
+    </div>
+
+    <ng-template #notLogged>
+        <div>
+            <a class="mx-auto" mat-button class="d-block" [routerLink]="['/login']">
+                Login
+            </a>
+            <hr>
+        </div>
+        <div>
+            <a class="mx-auto" mat-button class="d-block" [routerLink]="['/signup']">
+                Sign up
+            </a>
+            <hr>
+        </div> 
+    </ng-template>
+
+
+
+    <div class="d-flex">
+        <span class="me-4">{{(darkTheme$|async)? 'Light ': 'Dark '}}Theme</span>
+        <mat-slide-toggle class="ms-auto" (click)="toggleTheme()"></mat-slide-toggle>
+    </div>
+    <hr>
+    
 </div>

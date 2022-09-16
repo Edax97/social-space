@@ -5,17 +5,29 @@
 
     <mat-form-field *ngFor="let field of fieldList" appearance="fill">
       <mat-label>{{field.holder}}</mat-label>
-      <input matInput [ngModel]="field.value ?? ''" type="{{field.type ?? 'text'}}"
-      name="{{field.fieldname}}" [required]="field.required">
+      <div *ngIf="(field.multiline ?? false)  else oneline">
+        <textarea matInput name=""  [ngModel]="field.value ?? ''" name="{{field.fieldname}}" 
+        [required]="field.required ?? false" cdkTextareaAutosize></textarea>
+      </div>
+      <ng-template #oneline>
+        <input matInput [ngModel]="field.value ?? ''" type="{{field.type ?? 'text'}}"
+        name="{{field.fieldname}}" [required]="field.required ?? false" [disabled]="field.disabled ?? false">
+      </ng-template>
+      
       <mat-error>
         Please enter a valid {{field.holder}}.
       </mat-error>
     </mat-form-field>
 
-    <div>
+    <div class="d-flex justify-content-center">
+      <button mat-stroked-button color="warn" class="me-4" (click)="onCancel()">
+        Cancel
+      </button>
       <button mat-raised-button type="submit"
       color="primary">{{ buttonLabel }}</button>
     </div>
+
+    
     
   </form>
 </mat-card>

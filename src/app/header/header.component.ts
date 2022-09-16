@@ -37,10 +37,6 @@ export class HeaderComponent implements OnInit{
     this.toggleNav.emit(true);
   }
 
-  toggleTheme(){
-    this.themingService.toggleTheme();
-  }
-
   logout(){
     this.authService.logoutUser();
   }

@@ -1,7 +1,8 @@
 const express = require('express');
+const path = require('path');
 const postsRoutes = require('./routes/posts.routes')
 const userRoutes = require('./routes/user.routes');
-
+const profileRoutes = require('./routes/profile.routes')
 
 
 const mongoose = require('mongoose');
@@ -12,7 +13,8 @@ const app = express();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-app.use('/images', express.static('images'));
+app.use('/images', express.static(path.join(__dirname,'images')));
+app.use('/', express.static(path.join(__dirname,'angular')));
 
 app.use((req, res, next) => {
 res.setHeader("Access-Control-Allow-Origin", "*");
@@ -29,5 +31,10 @@ next();
 
 app.use("/api/posts", postsRoutes);
 app.use('/api/user', userRoutes);
+app.use('/api/profile', profileRoutes);
+
+app.use((req, res)=> {
+    res.sendFile(path.join(__dirname, 'angular', 'index.html'))
+})
 
 module.exports = app;

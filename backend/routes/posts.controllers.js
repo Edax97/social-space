@@ -1,5 +1,6 @@
 const fs = require('fs');
 const Post = require('../models/post.model');
+const User = require('../models/user.model');
 
 
 const exts = {
@@ -7,15 +8,33 @@ const exts = {
     'image/jpg': '.jpg',
     'image/png': '.png'
 }
-//Retrieve posts
-exports.getPosts = (req, res, next)=>{
-    console.log('Retrieving posts', req.query)
+
+function getFilter(req){
     let filter = {};
     if (req.query.profileId){
         filter = { 'userId': req.query.profileId}
+    } else if (req.userData){
+        return User.findOne({_id: req.userData.id})
+                .then(user => {
+                    console.log('User found', user)
+                    const following = user.following;
+                    filter = { 'userId': {$in: following} }
+                    return new Promise((r)=>{r(filter)});
+                })
     }
-    console.log(filter)
-    Post.find(filter).populate('userId').paginate(req.query)
+    return new Promise((resolve)=>{
+        resolve(filter);
+    })
+}
+
+//Retrieve posts
+exports.getPosts = (req, res, next)=>{
+    console.log('Retrieving posts', req.query)
+    
+    getFilter(req)
+        .then(f => {
+            return Post.find(f).populate('userId').paginate(req.query)
+        })
         .then(({data, pagination})=>{
             //console.log(data)
             res.status(201).json({
@@ -27,6 +46,7 @@ exports.getPosts = (req, res, next)=>{
         .catch(() => {
             res.status(500).json({message: 'Error getting posts'})
         })
+    
 }
 
 
@@ -52,7 +72,7 @@ exports.createPost = async (req, res) => {
     
     const post = new Post({
         title: req.body.title, 
-        content: req.body.content,
+        content: req.body.content ?? '',
         imagePath: path,
         userId: req.userData.id,
         likes: []
@@ -65,7 +85,9 @@ exports.createPost = async (req, res) => {
                 post: savedPost
             })
         })
-        .catch(() => {res.status(500).json({message: 'Error creating post'})})
+        .catch((e) => {
+            console.log('Error', e)
+            res.status(500).json({message: 'Error creating post'})})
     
 };
 
@@ -79,7 +101,7 @@ exports.updatePost = (req, res) => {
     }
     
     Post.updateOne({_id: req.params.id, userId: req.userData.id}, 
-                    {title: req.body.title, content: req.body.content, imagePath: path})
+                    {title: req.body.title, content: req.body.content ?? '', imagePath: path})
         .then(mongoRes => {
             console.log(mongoRes);
             if (mongoRes.modifiedCount > 0){

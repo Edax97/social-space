@@ -13,8 +13,10 @@ export class SignupComponent implements OnInit, OnDestroy {
     {holder: 'Email', fieldname: 'mail', required: true, type: 'email'},
     {holder: 'Password', fieldname: 'password', required: true, type: 'password'},
     {holder: 'Username', fieldname: 'username', required: true, },
-    {holder: 'First name', fieldname: 'name', required: false},
-    {holder: 'Last name', fieldname: 'lastname', required: false},
+    {holder: 'First name', fieldname: 'name'},
+    {holder: 'Last name', fieldname: 'lastname'},
+    {holder: 'Biography', fieldname: 'bio', multiline: true},
+
   ];
   isLogged: Subscription;
 

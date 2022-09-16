@@ -1,11 +1,12 @@
 const User = require('../models/user.model');
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
 
 exports.signupUser = (req, res, next) => {
     bcrypt.hash(req.body.password, 10)
         .then(hash => {
+            console.log('Signup body', req.body);
             //req.body has mail, password, username, name, lastname
             const user = new User({
                 ...req.body,
@@ -52,8 +53,7 @@ exports.loginUser = (req, res) => {
 
 exports.updateUser = (req, res, next) => {
     let retUser, hashedPss;
-    console.log('Update request', req.body)
-    User.findOne({mail: req.body.mail})
+    User.findOne({mail: req.userData.mail})
         .then(user => {
             if (!user){
                 res.status(401).json({message: 'User not registered.'})
@@ -63,7 +63,6 @@ exports.updateUser = (req, res, next) => {
             }
         })
         .then(samePss => {
-            console.log('Same password', samePss)
             if (!samePss) {
                 return res.status(401).json({message: 'Incorrect password!'})
             }
@@ -71,18 +70,16 @@ exports.updateUser = (req, res, next) => {
                 return bcrypt.hash(req.body.newpassword, 10);
             }
             return new Promise((resolve)=>{
-                console.log('Promise');
                 resolve(null);
             });
         })
         .then(hash => {
-            console.log('Hash', hash)
             const updatedPost = {
-                mail: retUser.mail,
                 password: hash ?? retUser.password,
                 username: req.body.username ?? retUser.username,
                 name: req.body.name ?? retUser.name,
-                lastname: req.body.lastname ?? retUser.lastname
+                lastname: req.body.lastname ?? retUser.lastname,
+                bio: req.body.bio ?? retUser.bio
             }
             return User.updateOne({mail: req.body.mail}, updatedPost);
         })
@@ -96,20 +93,5 @@ exports.updateUser = (req, res, next) => {
         })
 }
 
-exports.getProfile = (req, res) => {
-    console.log('Req params', req.query.profileId)
-    User.findById(req.query.profileId)
-        .then(user => {
-            
-            sentUser = {
-                ...user._doc,
-                password: ''
-            }
-            console.log(sentUser)
-            res.status(200).json(sentUser)
-        }
-        )
-        .catch((e) => {
-            console.log(e)
-            res.status(401).json({message: 'User does not exists!'})})
-}
+
+

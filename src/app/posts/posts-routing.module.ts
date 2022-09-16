@@ -9,7 +9,8 @@ const routes: Routes = [
   {path: '', component: PostListComponent},
   {path: 'create', component: PostCreate, canActivate: [AuthGuard]},
   {path: 'edit/:postId', component: PostCreate, canActivate: [AuthGuard]},
-  {path: 'profile/:profile', component: PostListComponent},
+  {path: 'profile/:profile', component: ProfileListComponent},
+  {path: 'following', component: PostListComponent},
 ];
 
 @NgModule({

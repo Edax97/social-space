@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { NgForm } from '@angular/forms';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-form',
@@ -9,10 +10,11 @@ import { NgForm } from '@angular/forms';
 export class FormComponent implements OnInit {
   @Input() isLoading! : boolean;
   @Input() buttonLabel! : string;
-  @Input() fieldList : {holder: string, fieldname: string, required: boolean, type?: string, value?: string}[] = [];
+  @Input() fieldList : {holder: string, fieldname: string, required?: boolean, type?: string, 
+    value?: string, disabled?: boolean, multiline?: boolean}[] = [];
 
   @Output('user') userData = new EventEmitter<{mail: string, password: string}>();
-  constructor() { }
+  constructor(private router: Router) { }
 
   ngOnInit(): void {
   }
@@ -22,6 +24,10 @@ export class FormComponent implements OnInit {
     if (form.valid){
       this.userData.emit(form.value);
     }
+  }
+
+  onCancel(){
+    this.router.navigate(['/'])
   }
 
 }

@@ -59,6 +59,7 @@ export class AuthService{
         )
     }
 
+    /*Login and Logout*/
     loginUser(user: LoginModel): void{
         this.http.post<any>
         (BACKEND_URL+'login',  user ).subscribe({
@@ -118,5 +119,7 @@ export class AuthService{
             this.localLogin(token, expTime - nowTime, userData);
         }
     }
+
+    
 
 }

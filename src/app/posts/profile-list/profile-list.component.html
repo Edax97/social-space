@@ -1,0 +1,17 @@
+<mat-spinner *ngIf="false else doneLoading"></mat-spinner>
+<ng-template #doneLoading>
+  <div>
+    <app-profile [profileInfo]="profile$|async" [userId]="userId$ | async"
+    (follow)="onFollow($event)"></app-profile>
+  </div>
+  <div *ngIf="(postsData$ | async) as data">
+    <app-posts [userId]="userId$ | async" [posts]="data.posts">
+    </app-posts>
+    <mat-paginator class="my-3" *ngIf="data.posts.length > 0" [pageIndex]="currentPage-1" [pageSize]="postsPerPage" [length]="data.maxPosts"  [pageSizeOptions]="[5,10,25,100]" (page)="onPage($event)">
+
+    </mat-paginator>
+    <div class="mat-body-1" *ngIf="data.posts.length <= 0">
+      <p>No posts added yet</p>
+    </div>
+  </div>
+</ng-template>

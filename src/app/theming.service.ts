@@ -1,13 +1,21 @@
 import { Injectable, OnInit } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Subject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ThemingService{
-  themeDark = new BehaviorSubject<boolean>(false)
+  themeDark = new BehaviorSubject<boolean>(false);
+  sideCollapsed = new Subject<boolean>;
+
   constructor() { }
-  
+  getTheme(){
+    return this.themeDark.asObservable();
+  }
+
+  collapseSide(){
+    this.sideCollapsed.next(true);
+  }
   retrieveTheme(){
     if (localStorage.getItem('theme')==='dark'){
       this.themeDark.next(true);
@@ -16,9 +24,7 @@ export class ThemingService{
       this.themeDark.next(false);
     }
   }
-  getTheme(){
-    return this.themeDark.asObservable();
-  }
+  
   toggleTheme(){
     this.themeDark.next(!this.themeDark.getValue());
     if (this.themeDark.getValue()){

@@ -45,6 +45,6 @@ import { AuthModule } from './auth/auth.module';
     {provide: MatPaginatorIntl, useClass: PaginatorCustomService}
   ],
   bootstrap: [AppComponent],
-  entryComponents: [ErrorComponent]
+  entryComponents: [ErrorComponent],
 })
 export class AppModule { }

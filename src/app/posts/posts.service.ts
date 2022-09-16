@@ -24,7 +24,6 @@ export class PostsService {
   profile = [''];
   private displayed: number = 5;
   private page: number = 1;
-  private retProfile = new BehaviorSubject<any>({});
 
   constructor(private http: HttpClient, private router: Router) { }
 
@@ -32,9 +31,7 @@ export class PostsService {
     return [this.postsUpdated.asObservable(), this.isLoading.asObservable()];
   }
 
-  getProfileListener(){
-    return this.retProfile.asObservable();
-  }
+
   
   getPosts(postsPerPage?: number, currentPage?: number): void {
     let queryParams = '';
@@ -55,12 +52,20 @@ export class PostsService {
       this.page = currentPage;
       this.profile = ['profile', profileId];
     }
-    this.getProfile(profileId).subscribe(prof => {
-      console.log('Profile obtained', prof)
-      this.retProfile.next(prof);
-      this.queryGetPosts(queryParams);
-    })
+    this.queryGetPosts(queryParams);
 
+
+  }
+
+  getFollowedPosts(postsPerPage?: number, currentPage?: number) {
+    let queryParams = '';
+    if (postsPerPage && currentPage){
+      queryParams = `following/?size=${postsPerPage}&page=${currentPage}`;
+      this.displayed = postsPerPage;
+      this.page = currentPage;
+      this.profile = ['following'];
+    }
+    this.queryGetPosts(queryParams);
   }
 
   queryGetPosts(queryParams){
@@ -153,10 +158,7 @@ export class PostsService {
     this.router.navigate(['/', ...this.profile], {queryParamsHandling: 'preserve'});
   }
 
-  getProfile(profileId: string){
-    return this.http.get<AuthModel>
-      (environment.API_URL+'user/profile/'+`?profileId=${profileId}`)
-  }
+  
 
   
 }

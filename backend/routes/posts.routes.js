@@ -6,8 +6,11 @@ const upload = multer({dest: 'images/'});
 
 const {getPost, getPosts, createPost, updatePost, deletePost, updateLikes} = require('./posts.controllers')
 
-//Retrieve posts
+//Retrieve posts, profile posts
 router.get("", getPosts)
+
+//Retrieve following posts
+router.get("/following", authCheck, getPosts);
 
 //Retrieve post by Id
 router.get('/:id', getPost);

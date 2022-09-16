@@ -12,6 +12,7 @@ import { PostCreate } from './post-create/post-create.component';
 import { PostListComponent } from './post-list/post-list.component';
 import { PostsComponent } from './posts/posts.component';
 import { ProfileListComponent } from './profile-list/profile-list.component';
+import { ProfileModule } from '../profile/profile.module';
 
 
 @NgModule({
@@ -29,7 +30,8 @@ import { ProfileListComponent } from './profile-list/profile-list.component';
     BrowserAnimationsModule,
     AngularMaterialModule,
     HttpClientModule,
-    PostsRoutingModule
+    PostsRoutingModule,
+    ProfileModule
   ]
 })
 export class PostsModule { }

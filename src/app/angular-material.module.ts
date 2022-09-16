@@ -12,6 +12,7 @@ import { MatPaginatorModule} from '@angular/material/paginator';
 import {MatSlideToggleModule} from '@angular/material/slide-toggle'; 
 import { MatSidenavModule } from '@angular/material/sidenav';
 import {MatDialogModule} from '@angular/material/dialog'; 
+import {MatMenuModule} from '@angular/material/menu';
 
 @NgModule({
     exports: [
@@ -28,6 +29,7 @@ import {MatDialogModule} from '@angular/material/dialog';
         MatSlideToggleModule,
         MatSidenavModule,
         MatDialogModule,
+        MatMenuModule
     ],
 })
 export class AngularMaterialModule { }

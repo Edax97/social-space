@@ -15,33 +15,18 @@ import { AuthModel } from 'src/app/auth/auth.model';
 })
 export class PostListComponent implements OnInit{
   isLoading$ : Observable<boolean>;
-  isLogged$: Observable<boolean>;
-  isProfile = false;
   profile$ : Observable<any>;
   userId$: Observable<string>;
   postsData$: Observable<{posts: Post[], maxPosts: NumberInput}>;
   currentPage = 1;
   postsPerPage = 5;
+  mode = '';
   
-  constructor( private service: PostsService, private authService: AuthService, private route: ActivatedRoute, private router: Router ){
+  constructor( private service: PostsService, private authService: AuthService, private route: ActivatedRoute){
     [this.postsData$, this.isLoading$] = this.service.getUpdateListener();
-    this.isLogged$ = this.authService.getLoggedListener();
     this.userId$ = this.authService.getIdListener();
-    this.profile$ = this.service.getProfileListener();
   }
   ngOnInit(){
-    this.route.paramMap.subscribe(params => {
-      if (params.has('profile')){
-        this.isProfile = true;
-        this.queryHandling(params.get('profile'))
-      } else {
-        this.isProfile = false;
-        this.queryHandling();
-      }
-    })
-  }
-
-  queryHandling(profile?: string){
     this.route.queryParamMap.subscribe(params => {
       if (params.has('page')){
         console.log('Page: ', params.get('page'));
@@ -51,31 +36,25 @@ export class PostListComponent implements OnInit{
         this.postsPerPage = +params.get('displayed');
         console.log('Displayed', this.postsPerPage)
       }
-      else{
-        this.currentPage = 1;
-      }
+      
       console.log(this.currentPage, this.postsPerPage)
-      if (this.isProfile){
-        this.service.getProfilePosts(profile, this.postsPerPage, this.currentPage)
+      if (this.route.snapshot.url[0]){
+        this.mode = 'following';
+        this.service.getFollowedPosts(this.postsPerPage, this.currentPage);
       } else {
         this.service.getPosts(this.postsPerPage, this.currentPage);
       }
-    })
+    }) 
   }
-
-  onDelete(id: string){
-    this.service.deletePost(id);
-  }
-
-  onUpvote(voteInfo: [postId: string, userId: string]){
-    this.service.likePost(...voteInfo);
-  }
-
   onPage(data: PageEvent){
     console.log(data);
     this.postsPerPage = data.pageSize;
     this.currentPage = data.pageIndex + 1;
-    this.service.getPosts(this.postsPerPage, this.currentPage);
+    if (this.mode == 'following'){
+      this.service.getFollowedPosts(this.postsPerPage, this.currentPage);
+    } else {
+      this.service.getPosts(this.postsPerPage, this.currentPage);
+    }
   }
 
 }

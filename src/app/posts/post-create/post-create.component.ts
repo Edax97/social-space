@@ -23,8 +23,7 @@ export class PostCreate implements OnInit{
     this.form = new FormGroup({
       title: new FormControl(null, {
         validators: [Validators.required, Validators.minLength(1)]}),
-      content: new FormControl(null, {
-        validators: [Validators.required, Validators.minLength(1)]}),
+      content: new FormControl(''),
       image: new FormControl(null, {asyncValidators: [mimeType]})
     });
     //Rendering of component
@@ -60,6 +59,7 @@ export class PostCreate implements OnInit{
   }
 
   private imageToUrl(f: File){
+    console.log('reading file')
     if (this.form.get('image').invalid){return;}
     const reader = new FileReader();
     reader.onload= ()=>{
@@ -89,5 +89,10 @@ export class PostCreate implements OnInit{
   onCancel(): void{
     this.isLoading = true;
     this.service.returnList();
+  }
+
+  onCancelImage(): void{
+    this.form.patchValue({image: ''});
+    this.imagePreview = '';
   }
 }

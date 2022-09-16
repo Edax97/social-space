@@ -1,14 +1,15 @@
-<div [ngClass]="{'dark-theme': (themeDark$|async)}">
+<div [ngClass]="{'dark-theme': theme}">
   <app-header (menu)="sidenav.toggle()">
   </app-header>
   <mat-sidenav-container class="vh-100 main-container">
-    <mat-sidenav mode="side" opened="false" #sidenav>
+    <mat-sidenav mode="over" [opened]="opened" #sidenav>
       <app-sidebar></app-sidebar>
     </mat-sidenav>
-    <mat-sidenav-content>
+    <mat-sidenav-content class="">
       <main>
         <router-outlet></router-outlet>
       </main>
+      
     </mat-sidenav-content>
   </mat-sidenav-container>
 </div>

@@ -6,6 +6,10 @@ export interface AuthModel{
     name?: string,
     lastname?: string,
     _id?: string,
+    profilepic?: string,
+    bio?: string,
+    following?: string[],
+    followers?: string[], 
 }
 
 export interface LoginModel{

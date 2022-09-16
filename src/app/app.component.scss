@@ -2,9 +2,9 @@
 Breakpoints
 */
 $breakpoints: (
-  'small':  767px,
-  'medium': 992px,
-  'large':  1200px
+  'small':  576px,
+  'medium': 768px,
+  'large':  992px
 ) !default;
 @mixin respond-to($breakpoint) {
   @if map-has-key($breakpoints, $breakpoint) {
@@ -15,13 +15,14 @@ $breakpoints: (
 }
 
 main{
-  width: 90%;
+  width: 98%;
   @include respond-to('medium'){
     width: 80%;
   }
   @include respond-to('large'){
-    width: 70%;
+    width: 60%;
   }
+  
   display: block;
   margin: 1.2rem auto auto;
 }
