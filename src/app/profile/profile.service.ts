@@ -10,25 +10,12 @@ const BACKEND_URL = environment.API_URL + 'profile/';
   providedIn: 'root'
 })
 export class ProfileService {
-  private retProfile = new BehaviorSubject<any>({});
-  private profile: AuthModel;
 
   constructor(private http: HttpClient) { }
-
-  
-  getProfileListener(){
-    return this.retProfile.asObservable();
-  }
-
 
   getProfile(profileId: string){
     return this.http.get<AuthModel>
       (BACKEND_URL+'profile/'+`?profileId=${profileId}`)
-      .subscribe(prof => {
-        this.profile = prof;
-        this.retProfile.next(this.profile);
-        console.log('Profile obtained', prof)
-      })
   }
 
   //Follow account
@@ -38,11 +25,11 @@ export class ProfileService {
     .subscribe(res => {
         console.log('Follow account response: ', res);
         if (res.message === 'Following'){
-          this.profile.followers.push(res.userId);
+          //this.profile.followers.push(res.userId);
         } else {
-          this.profile.followers = this.profile.followers.filter(u => u !== res.userId)
+          //this.profile.followers = this.profile.followers.filter(u => u !== res.userId)
         }
-        this.retProfile.next(this.profile);
+        this.getProfile(accountId);
     })
   }
 

@@ -1,3 +1,4 @@
+import { isNgTemplate } from '@angular/compiler';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Post } from '../models';
 import { PostsService } from '../posts.service';
@@ -24,6 +25,10 @@ export class PostsComponent implements OnInit {
 
   onDelete(postId: string){
     this.service.deletePost(postId);
+  }
+
+  identical(index, item){
+    return item.id;
   }
 
 }

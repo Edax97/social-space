@@ -2,7 +2,7 @@ import { OverlayContainer } from '@angular/cdk/overlay';
 import { Component, ElementRef, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { MatSidenav } from '@angular/material/sidenav';
 import { NavigationEnd, Router } from '@angular/router';
-import { filter, Observable, Subject, Subscription } from 'rxjs';
+import { filter, Observable, Subject, Subscription, tap } from 'rxjs';
 import { AuthService } from './auth/auth.service';
 import { ThemingService } from './theming.service';
 
@@ -13,24 +13,17 @@ import { ThemingService } from './theming.service';
   encapsulation: ViewEncapsulation.None
 })
 export class AppComponent implements OnInit {
-  themeSub : Subscription;
-  theme = false;
+  theme$ : Observable<boolean>;
   opened = false;
   @ViewChild('sidenav', {static: true}) side: any;
 
   constructor(private authService: AuthService, private themingService: ThemingService, 
     private router: Router, private overlayContainer: OverlayContainer){
-    
-    this.themeSub =  this.themingService.getTheme().subscribe( dark=>{
-      console.log('Theme dark', dark)
-      if (dark){
-        this.theme = true;
-        this.overlayContainer.getContainerElement().classList.add('dark-theme');
-      } else {
-        this.theme = false;
-        this.overlayContainer.getContainerElement().classList.remove('dark-theme');
-      }
-    });
+    const overlayClass = this.overlayContainer.getContainerElement().classList
+    this.theme$ = themingService.getTheme().pipe(tap(t => {
+      if (t){ overlayClass.add('dark-theme') }
+      else { overlayClass.remove('dark-theme') }
+    }))
     
   }
   ngAfterViewInit(){
@@ -42,8 +35,6 @@ export class AppComponent implements OnInit {
     this.authService.autoAuth();
     this.themingService.retrieveTheme()
   }
-  ngOnDestroy(){
-    this.themeSub.unsubscribe();
-  }
+  
 }
 

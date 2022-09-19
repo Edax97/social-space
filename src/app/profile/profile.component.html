@@ -1,5 +1,5 @@
 
-<mat-expansion-panel class="mb-3 py-2" hideToggle="true">
+<mat-expansion-panel class="mb-3 py-2" hideToggle="true" *ngIf="profileInfo$|async as profileInfo">
     <mat-expansion-panel-header>
         <mat-panel-title class="fs-5">
             {{profileInfo.username}}
@@ -12,7 +12,7 @@
         </ng-template>
         
     </mat-expansion-panel-header>
-    <div class="p-2 shadow-box" *ngIf="profileInfo.bio">
+    <div class="mt-1" *ngIf="profileInfo.bio">
         <p>{{profileInfo.bio}}</p>
     </div>
     <div class="mt-3 fs-7" *ngIf="profileInfo.following">

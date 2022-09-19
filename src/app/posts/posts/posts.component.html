@@ -1,5 +1,5 @@
 <mat-accordion multi="true">
-  <div *ngFor="let post of posts">
+  <div *ngFor="let post of posts; trackBy: identical">
     <mat-expansion-panel class='post' hideToggle='true'>
       <mat-expansion-panel-header class="my-2 pe-0 me-0">
         <mat-panel-title>
@@ -9,15 +9,17 @@
           <a class="d-inline" mat-button color='primary' [routerLink]="['/profile', post.userId._id]">@{{post.userId.username}}</a>
         </span>
       </mat-expansion-panel-header>
-      <div class="pic-view align shadow-box" *ngIf="post.imagePath !== ''">
-        <img [src]="post.imagePath" [alt]="post.title">
+      <div class="pic-view" *ngIf="post.imagePath !== ''">
+        <img class="shadow-box" [src]="post.imagePath" [alt]="post.title">
       </div>
-      <div class="shadow-box p-2" *ngIf="post.content !== ''">
+      <div class="p-2" *ngIf="post.content !== ''">
         <p class="content">{{ (post.content) }}</p>
       </div>      
       <mat-action-row>
-        <button class="me-auto" color="accent" mat-icon-button (click)="onUpvote(post.id, userId)">
-          <mat-icon>favorite</mat-icon>
+        <button class="me-auto " color="accent"  [ngClass]="{'fill': post.likes.includes(userId)}" 
+          mat-icon-button (click)="onUpvote(post.id, userId)">
+          <span class="material-symbols-outlined">
+            favorite</span>
           <mat-label class="ms-1">{{post.likes.length}}</mat-label>
         </button> 
         

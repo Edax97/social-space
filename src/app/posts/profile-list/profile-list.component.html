@@ -1,8 +1,7 @@
 <mat-spinner *ngIf="false else doneLoading"></mat-spinner>
 <ng-template #doneLoading>
   <div>
-    <app-profile [profileInfo]="profile$|async" [userId]="userId$ | async"
-    (follow)="onFollow($event)"></app-profile>
+    <app-profile [profileId]="profileId" [userId]="userId$ | async"></app-profile>
   </div>
   <div *ngIf="(postsData$ | async) as data">
     <app-posts [userId]="userId$ | async" [posts]="data.posts">

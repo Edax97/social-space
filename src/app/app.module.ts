@@ -18,6 +18,7 @@ import { PostsModule } from './posts/posts.module';
 import { AppRoutingModule } from './app-routing.module';
 import { SidebarComponent } from './sidebar/sidebar.component';
 import { AuthModule } from './auth/auth.module';
+import { FooterComponent } from './footer/footer.component';
 
 
 @NgModule({
@@ -26,6 +27,7 @@ import { AuthModule } from './auth/auth.module';
     HeaderComponent,
     ErrorComponent,
     SidebarComponent,
+    FooterComponent,
   ],
   imports: [
     BrowserModule,

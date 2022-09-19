@@ -15,7 +15,6 @@ import { AuthModel } from 'src/app/auth/auth.model';
 })
 export class PostListComponent implements OnInit{
   isLoading$ : Observable<boolean>;
-  profile$ : Observable<any>;
   userId$: Observable<string>;
   postsData$: Observable<{posts: Post[], maxPosts: NumberInput}>;
   currentPage = 1;

@@ -1,5 +1,8 @@
 <mat-spinner *ngIf="isLoading$|async as isLoading else doneLoading"></mat-spinner>
 <ng-template #doneLoading>
+  <div *ngIf="mode ==='following'" class="ms-3">
+    <h2>Following</h2>
+  </div>
   <div *ngIf="(postsData$ | async) as data">
     <app-posts [userId]="userId$ | async" [posts]="data.posts">
     </app-posts>

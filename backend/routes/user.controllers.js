@@ -33,13 +33,13 @@ exports.loginUser = (req, res) => {
     let userFetched;
     User.findOne({mail: req.body.mail})
         .then(user => {
-            if (!user){ return send_error(res, 'Login1') }
+            if (!user){ throw('Account does not exist') }
             userFetched = user;
             console.log(user)
             return bcrypt.compare(req.body.password, user.password);
         })
         .then(pss_res => {
-            if (!pss_res){ return send_error(res, 'Login')}
+            if (!pss_res){ throw('Incorrect password.') }
             const token = jwt.sign({mail: userFetched.mail, id: userFetched._id},
                 process.env.JWT_KEY,
                 {expiresIn: '1h'}
@@ -48,7 +48,7 @@ exports.loginUser = (req, res) => {
                 userData: (userFetched),
             });
         })
-        .catch(() => {res.status(401).json({message: 'Invalid credentials!'})})
+        .catch((e) => {res.status(401).json({message: e})})
 }
 
 exports.updateUser = (req, res, next) => {
@@ -56,7 +56,7 @@ exports.updateUser = (req, res, next) => {
     User.findOne({mail: req.userData.mail})
         .then(user => {
             if (!user){
-                res.status(401).json({message: 'User not registered.'})
+                throw('Account does not exist.');
             } else {
                 retUser = user;
                 return bcrypt.compare(req.body.password, retUser.password)
@@ -64,7 +64,7 @@ exports.updateUser = (req, res, next) => {
         })
         .then(samePss => {
             if (!samePss) {
-                return res.status(401).json({message: 'Incorrect password!'})
+                throw('Incorrect password.');
             }
             if (req.body.newpassword){
                 return bcrypt.hash(req.body.newpassword, 10);
@@ -81,15 +81,16 @@ exports.updateUser = (req, res, next) => {
                 lastname: req.body.lastname ?? retUser.lastname,
                 bio: req.body.bio ?? retUser.bio
             }
-            return User.updateOne({mail: req.body.mail}, updatedPost);
+            console.log('Updated', updatedPost)
+            return User.updateOne({mail: req.userData.mail}, updatedPost);
         })
         .then(dbRes => {
             console.log('update response',dbRes);
-            res.status(201).json({message: 'Profile updated'})
+            res.status(201).json({message: 'Profile updated', mail: retUser.mail})
         })
         .catch(e => {
             console.log(e);
-            res.status(400).json({message: 'Error updating profile.'})
+            res.status(400).json({message: e})
         })
 }
 

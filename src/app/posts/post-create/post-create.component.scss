@@ -24,9 +24,9 @@ mat-card{
     }
   }
   .preview-image{
-    width: 100%;
-    @include respond-to('medium'){
-      width: 70%;
+    img{
+      max-height: 100vw;
+      max-width: 100%;
     }
   }
 }

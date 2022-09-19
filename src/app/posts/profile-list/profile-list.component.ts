@@ -14,7 +14,6 @@ import { PostsService } from '../posts.service';
 })
 export class ProfileListComponent implements OnInit {
   isLoading$: Observable<boolean>;
-  profile$ : Observable<any>;
   profileId : string|undefined;
   userId$: Observable<string>;
   postsData$: Observable<{posts: Post[], maxPosts: NumberInput}>;
@@ -25,13 +24,11 @@ export class ProfileListComponent implements OnInit {
     private route: ActivatedRoute, private profileSer: ProfileService ) { 
     [this.postsData$, this.isLoading$] = this.postService.getUpdateListener();
     this.userId$ = this.authService.getIdListener();
-    this.profile$ = this.profileSer.getProfileListener();
   }
 
   ngOnInit(): void {
     this.route.paramMap.subscribe(params => {
       this.profileId = params.get('profile');
-      this.profileSer.getProfile(this.profileId);
       this.queryHandling(this.profileId);
     })
   }

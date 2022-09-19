@@ -15,14 +15,14 @@
 
     <div class="preview-image mt-2">
       <div class="d-flex">
-        <button class="me-auto mb-2" mat-stroked-button type="button" (click)="filepicker.click()">Pick image</button>
+        <button class="me-4 mb-2" mat-stroked-button type="button" (click)="filepicker.click()">Pick image</button>
         <a mat-icon-button *ngIf="imagePreview !== ''" (click)="onCancelImage()" class="accent-text">
           <mat-icon>cancel</mat-icon>
         </a>
       </div>
 
       <div class= 'mb-4' *ngIf="imagePreview !== '' && imagePreview && form.get('image').valid">
-        <img class='shadow-box w-100' [src]="imagePreview" [alt]="form.value.image.name">
+        <img class='shadow-box' [src]="imagePreview" [alt]="form.value.image.name">
       </div>
       <div *ngIf="form.get('image').invalid"><p class='warn-text'>
         Invalid file type!</p></div>

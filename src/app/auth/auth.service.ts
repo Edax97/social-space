@@ -48,15 +48,16 @@ export class AuthService{
     }
 
     updateUser(modUser: AuthModel): void{
-        this.http.post
-        (BACKEND_URL+'update', modUser).subscribe(
-            res => {
-                console.log('Updating profile', modUser);
-                const logUser = {mail: modUser.mail, password: modUser.newpassword ?? modUser.password}
-                console.log('New user credential', logUser)
+        this.http.post<any>
+        (BACKEND_URL+'update', modUser).subscribe({
+            next: res => {
+                const logUser = {mail:res.mail, password: modUser.newpassword || modUser.password}
                 this.loginUser(logUser);
+            },
+            error: err => {
+                this.router.navigate(['/'])
             }
-        )
+        })
     }
 
     /*Login and Logout*/

@@ -2,7 +2,8 @@
 Breakpoints
 */
 $breakpoints: (
-  'small':  576px,
+  'extra-small': 370px,
+  'small':  595px,
   'medium': 768px,
   'large':  992px
 ) !default;
@@ -27,6 +28,31 @@ main{
   margin: 1.2rem auto auto;
 }
 
+@mixin top-pos(){
+  top: 56px;  // here you must specify the height of your topbar
+  @include respond-to('small'){
+    top: 64px;
+  }
+}
+.main-container {
+  position: absolute;
+  @include top-pos();
+  bottom: 0;
+  left: 0;
+  right: 0;
+  mat-sidenav{
+    position: fixed;
+    @include top-pos();
+  }
+}
+
 mat-spinner{
   margin: auto;
+}
+
+app-footer{
+  left: 0;
+  bottom: 0;
+  position: fixed;
+  width: 100%;
 }
