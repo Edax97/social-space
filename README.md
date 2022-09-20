@@ -12,4 +12,5 @@ This project was generated with [Angular CLI](https://github.com/angular/angular
 - Display posts from following accounts
 
 # See live
+
 The app can be accesed [here](https://cool-social-space.netlify.app/)
